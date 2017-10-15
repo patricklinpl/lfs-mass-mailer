@@ -1,0 +1,17 @@
+.App {
+  background: #FFFFFF;
+}
+
+.app-container {
+  margin-left: -15px;
+  margin-right: -15px;
+  padding: 15px 15px 15px 15px;
+  background: #FFFFFF;
+}
+
+.form {
+  width: auto;
+  border: 2px;
+  padding: 25px;
+  margin: 25px;
+}
