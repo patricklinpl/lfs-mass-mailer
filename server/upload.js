@@ -6,8 +6,13 @@ const storage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: (req, file, cb) => {
-    const timeStamp = new Date().toJSON().slice(0, 10).replace(/-/g, '-')
-    cb(null, `${timeStamp}${path.extname(file.originalname)}`)
+    const date = new Date()
+    const hr = date.getHours()
+    const min = date.getMinutes()
+    const sec = date.getSeconds()
+    const time = `${hr}:${msin}:${sec}`
+    const timeStamp = date.toJSON().slice(0, 10).replace(/-/g, '-')
+    cb(null, `${timeStamp}-${time}${path.extname(file.originalname)}`)
   }
 })
 
