@@ -7,10 +7,15 @@ export default class Controller extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      uploadCSV: true,
+      uploadCSV: false,
       contacts: null
     }
+    this.isObject = this.isObject.bind(this)
   }
+
+  isObject (value) {
+    return value && typeof value === 'object' && value.constructor === Object
+  };
 
   handleSubmit (state) {
     return event => {
@@ -24,10 +29,9 @@ export default class Controller extends Component {
         if (xhr.readyState === 4 && xhr.status === 200) {
           const json = JSON.parse(xhr.response)
           this.setState({
-            contacts: json,
-            uploadCSV: false,
+            uploadCSV: true,
+            contacts: json
           })
-          state.contacts = json
         }
       }
       xhr.open('POST', 'api/form')
@@ -39,8 +43,8 @@ export default class Controller extends Component {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
-        {this.state.uploadCSV === true ? <Form handleSubmit={this.handleSubmit.bind(this)} /> : null}
-        {typeof this.state.contacts !== null ? <PreviewContact /> : null}
+        {this.state.uploadCSV === false ? <Form handleSubmit={this.handleSubmit.bind(this)} /> : null}
+        {this.isObject(this.state.contacts) ? <PreviewContact /> : null}
       </div>
     )
   }
