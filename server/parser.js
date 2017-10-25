@@ -1,19 +1,19 @@
-import csv from 'fast-csv'
 import fs from 'fs'
+import parse from 'csv-parse'
+import path from 'path'
 
-const parseCSV = (form, file) => {
-    console.log(file)
-    const stream = fs.createReadStream(`./${file.path}`)
-    csv
-    .fromStream(stream)
-    .on("data", function(data){
-        console.log(data);
-    })
-    .on("end", function(){
-        console.log("done");
-    });
+const readCSV = (file, callback) => {
+  const filename = `${file.filename}`
+  const parser = parse({delimiter: ',', columns: true, relax: true, auto_parse: true}, (err, data) => {
+    if (err) {
+      callback(err)
+    } else {
+      callback(null, data)
+    }
+  })
+  fs.createReadStream(path.join(__dirname, '../uploads/', filename)).pipe(parser)
 }
 
-export { 
-    parseCSV
+export {
+    readCSV
 }

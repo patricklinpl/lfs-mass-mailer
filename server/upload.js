@@ -10,7 +10,7 @@ const storage = multer.diskStorage({
     const hr = date.getHours()
     const min = date.getMinutes()
     const sec = date.getSeconds()
-    const time = `${hr}:${msin}:${sec}`
+    const time = `${hr}:${min}:${sec}`
     const timeStamp = date.toJSON().slice(0, 10).replace(/-/g, '-')
     cb(null, `${timeStamp}-${time}${path.extname(file.originalname)}`)
   }
