@@ -13,7 +13,7 @@ routes.post('/api/form', (req, res) => {
         if (error) {
           res.status(404).send({ type: 'error', msg: err })
         }
-        res.status(200).send({contacts: data})
+        res.status(200).send({csv: data})
       })
     }
   })
