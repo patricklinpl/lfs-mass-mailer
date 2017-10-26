@@ -36,6 +36,7 @@
     "nodemailer": "^4.1.3",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
+    "react-quill": "^1.1.0",
     "react-responsive-table": "^2.0.15",
     "react-scripts": "1.0.14",
     "rimraf": "^2.6.2"

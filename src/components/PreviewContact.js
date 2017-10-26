@@ -8,7 +8,8 @@ export default class PreviewContact extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      csv: props.data
+      csv: props.data,
+      previewData: props.previewData
     }
     this.tableBuilder = this.tableBuilder.bind(this)
     this.getHeaders = this.getHeaders.bind(this)
@@ -42,7 +43,6 @@ export default class PreviewContact extends Component {
     const rowArray = []
     if (data) {
       const headers = Object.keys(data)
-      console.log(headers)
       for (let i = 0; i < headers.length; i++) {
         rowArray.push(<Cell minWidthPx={100} key={`cell${i + 1}`}>{data[headers[i]]}</Cell>)
       }
@@ -58,6 +58,9 @@ export default class PreviewContact extends Component {
             {this.tableBuilder(this.state.csv)}
           </Table>
         </MuiThemeProvider>
+        <div className='control-buttons'>
+          <button onClick={this.props.writeTemplate}> Next </button>
+        </div>
       </div>
     )
   }
