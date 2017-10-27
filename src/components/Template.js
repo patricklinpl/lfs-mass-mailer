@@ -10,27 +10,40 @@ export default class Template extends Component {
     super(props)
     this.state = {
       text: '<p>Hello %First Name%</p>',
-      headers: props.headers
+      headers: props.headers,
+      idHeaders: null
     }
     this.handleChange = this.handleChange.bind(this)
     this.buildIdentifer = this.buildIdentifer.bind(this)
     this.handleTemplate = this.handleTemplate.bind(this)
+    this.buildHeaders = this.buildHeaders.bind(this)
   }
 
   handleChange (value) {
     this.setState({ text: value })
   }
 
-  buildIdentifer () {
+  buildHeaders () {
+    const tableHeads = []
     const idHeads = []
     this.state.headers.forEach(head => {
-      idHeads.push(<Cell minWidthPx={50} key={`cell`}>{`%${head}%`}</Cell>)
+      const id = `%${head}%`
+      idHeads.push(id)
+      tableHeads.push(<Cell minWidthPx={50} key={`cell`}>{id}</Cell>)
     })
-    return idHeads.map(row => row)
+    return {
+      table: tableHeads,
+      id: idHeads
+    }
+  }
+
+  buildIdentifer () {
+    const tableHeads = this.buildHeaders().table
+    return tableHeads.map(row => row)
   }
 
   handleTemplate () {
-    this.props.handleTemplate(this.state.text)
+    this.setState({ idHeaders: this.buildHeaders().id }, () => this.props.handleTemplate(this.state.text, this.state.idHeaders))
   }
 
   render () {

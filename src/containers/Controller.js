@@ -14,6 +14,7 @@ export default class Controller extends Component {
       uploadTemplate: false,
       previewTemplate: false,
       headers: null,
+      tempHeaders: null,
       data: null,
       template: null
     }
@@ -60,13 +61,15 @@ export default class Controller extends Component {
     })
   }
 
-  handleTemplate (text) {
+  handleTemplate (text, headers) {
+    console.log(headers)
     this.setState({
       uploadCSV: true,
       previewData: false,
       uploadTemplate: false,
       previewTemplate: true,
-      template: text
+      template: text,
+      tempHeaders: headers
     })
   }
 
@@ -89,6 +92,8 @@ export default class Controller extends Component {
         {this.state.previewTemplate === true
         ? <PreviewTemplate
           template={this.state.template}
+          headers={this.state.headers}
+          tempHeaders={this.state.tempHeaders}
           data={this.state.data}
         /> : null}
       </div>
