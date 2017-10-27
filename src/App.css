@@ -9,6 +9,12 @@
   background: #FFFFFF;
 }
 
+.box {
+  width: auto;
+  border: 2px solid black;
+  padding: 25px;
+}
+
 .form {
   width: auto;
   border: 2px;

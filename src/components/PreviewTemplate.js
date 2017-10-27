@@ -28,7 +28,12 @@ export default class PreviewTemplate extends Component {
 
   render () {
     return (
-      <div dangerouslySetInnerHTML={{ __html: this.getSampleData() }} />
+      <div>
+        <h1>Preview of First Row</h1>
+        <div className='box'>
+          <div dangerouslySetInnerHTML={{ __html: this.getSampleData() }} />
+        </div>
+      </div>
     )
   }
 }
