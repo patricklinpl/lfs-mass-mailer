@@ -47,6 +47,10 @@ export default class Controller extends Component {
             })
           }
         }
+        if (xhr.readyState === 4 && xhr.status === 404) {
+          const json = JSON.parse(xhr.response)
+          console.log(json)
+        }
       }
       xhr.open('POST', 'api/form')
       xhr.send(FD)
@@ -62,7 +66,6 @@ export default class Controller extends Component {
   }
 
   handleTemplate (text, headers) {
-    console.log(headers)
     this.setState({
       uploadCSV: true,
       previewData: false,

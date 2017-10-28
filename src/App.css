@@ -15,6 +15,10 @@
   padding: 25px;
 }
 
+input[type="file"] {
+  line-height: 10px;
+}
+
 .form {
   width: auto;
   border: 2px;
