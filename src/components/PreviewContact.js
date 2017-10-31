@@ -1,7 +1,4 @@
 import React, { Component } from 'react'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { Table, Row, Cell } from 'react-responsive-table'
 
 export default class PreviewContact extends Component {
@@ -21,7 +18,7 @@ export default class PreviewContact extends Component {
     if (data.length > 0) {
       const headerRow = <Row header key='row1'>{this.getHeaders(data)}</Row>
       tableArray.push(headerRow)
-      for (let i = 0; i < data.length; i++) {
+      for (let i = 0; i < (data.length > 10 ? 10 : data.length); i++) {
         tableArray.push(<Row striped key={`row${i + 2}`}>{this.getRowData(data[i])}</Row>)
       }
     }
@@ -53,11 +50,10 @@ export default class PreviewContact extends Component {
   render () {
     return (
       <div className='md-table'>
-        <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-          <Table material className='md-table'>
-            {this.tableBuilder(this.state.csv)}
-          </Table>
-        </MuiThemeProvider>
+        <Table material className='md-table'>
+          {this.tableBuilder(this.state.csv)}
+        </Table>
+        <br />
         <div className='control-buttons'>
           <button onClick={this.props.writeTemplate}> Next </button>
         </div>

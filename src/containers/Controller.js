@@ -1,9 +1,10 @@
-/* global XMLHttpRequest, FormData */
+/* global XMLHttpRequest, FormData, alert */
 import React, { Component } from 'react'
 import Form from '../components/Form'
 import PreviewContact from '../components/PreviewContact'
 import Template from '../components/Template'
 import PreviewTemplate from '../components/PreviewTemplate'
+import Loading from '../components/Loading'
 
 export default class Controller extends Component {
   constructor (props) {
@@ -16,7 +17,8 @@ export default class Controller extends Component {
       headers: null,
       tempHeaders: null,
       data: null,
-      template: null
+      template: null,
+      loading: false
     }
     this.getHeaders = this.getHeaders.bind(this)
   }
@@ -30,6 +32,7 @@ export default class Controller extends Component {
   handleUpload (state) {
     return event => {
       event.preventDefault()
+      this.setState({ loading: true })
       let FD = new FormData()
       for (let name in state) {
         FD.append(name, state[name])
@@ -43,13 +46,19 @@ export default class Controller extends Component {
             this.setState({
               uploadCSV: true,
               data: json.csv,
-              previewData: true
+              previewData: true,
+              loading: false
             })
           }
         }
         if (xhr.readyState === 4 && xhr.status === 404) {
           const json = JSON.parse(xhr.response)
-          console.log(json)
+          this.setState({ loading: false })
+          if (json.msg.code) {
+            alert('File is too large!')
+          } else {
+            alert('Please upload a .csv file!')
+          }
         }
       }
       xhr.open('POST', 'api/form')
@@ -81,6 +90,7 @@ export default class Controller extends Component {
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
         {this.state.uploadCSV === false ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
+        {this.state.loading === true ? <Loading /> : null}
         {(Array.isArray(this.state.data) && this.state.previewData === true)
         ? <PreviewContact
           writeTemplate={this.writeTemplate.bind(this)}
