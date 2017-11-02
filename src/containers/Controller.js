@@ -15,6 +15,7 @@ export default class Controller extends Component {
       uploadTemplate: false,
       previewTemplate: false,
       headers: null,
+      emailHeader: null,
       tempHeaders: null,
       data: null,
       template: null,
@@ -68,11 +69,15 @@ export default class Controller extends Component {
   }
 
   backToUpload () {
-    this.setState({ uploadCSV: false, previewData: false, data: null, headers: null })
+    this.setState({ uploadCSV: false, previewData: false, data: null, headers: null, emailHeader: null })
   }
 
   handleTemplate (text, headers) {
     this.setState({ uploadCSV: true, previewData: false, uploadTemplate: false, previewTemplate: true, template: text, tempHeaders: headers })
+  }
+
+  selectEmail (event, index, value) {
+    this.setState({emailHeader: value})
   }
 
   render () {
@@ -84,6 +89,8 @@ export default class Controller extends Component {
         ? <PreviewContact
           writeTemplate={this.writeTemplate.bind(this)}
           backToUpload={this.backToUpload.bind(this)}
+          selectEmail={this.selectEmail.bind(this)}
+          emailHeader={this.state.emailHeader}
           headers={this.state.headers}
           data={this.state.data}
           previewData={this.state.previewData}

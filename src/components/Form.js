@@ -45,7 +45,7 @@ export default class Form extends Component {
                     labelPosition='before'
                     style={styles.button}
                     containerElement='label'>
-                    <input type='file' name='file' ref='file' onChange={this.handleFileSelect} style={styles.fileInput} />
+                    <input type='file' name='file' ref='file' onChange={this.handleFileSelect} style={styles.fileInput} required />
                   </RaisedButton>
                   {!this.state.files ? null : this.state.files.name}
                 </Cell>

@@ -2,16 +2,28 @@ import React, { Component } from 'react'
 import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
 import RaisedButton from 'material-ui/RaisedButton'
+import SelectField from 'material-ui/SelectField'
+import MenuItem from 'material-ui/MenuItem'
 
 export default class PreviewContact extends Component {
   constructor (props) {
     super(props)
     this.state = {
       csv: props.data,
-      previewData: props.previewData
+      previewData: props.previewData,
     }
     this.tableBuilder = this.tableBuilder.bind(this)
     this.cellBuilder = this.cellBuilder.bind(this)
+    this.dropDownBuilder = this.dropDownBuilder.bind(this)
+  }
+
+  dropDownBuilder () {
+    const options = []
+    const headers = this.props.headers
+    for (let i = 0; i < headers.length; i++) {
+      options.push(<MenuItem value={headers[i]} primaryText={headers[i]} />)
+    }
+    return options
   }
 
   cellBuilder (data, type) {
@@ -43,11 +55,20 @@ export default class PreviewContact extends Component {
           <Table material className='md-table'>
             {this.tableBuilder(this.state.csv)}
           </Table>
-          <br />
-          <div className='control-buttons'>
-            <RaisedButton label='Back' onClick={this.props.backToUpload} />
-            <RaisedButton label='Next' primary onClick={this.props.writeTemplate} />
-          </div>
+        </div>
+        <br />
+        <br />
+        <div className='control-buttons' >
+          <SelectField floatingLabelText='Select Email Identifier' value={this.props.emailHeader} onChange={this.props.selectEmail}>
+            <MenuItem value={null} primaryText='' />
+            {this.dropDownBuilder()}
+          </SelectField>
+        </div>
+        <br />
+        <br />
+        <div className='control-buttons'>
+          <RaisedButton label='Back' onClick={this.props.backToUpload} />
+          <RaisedButton label='Next' primary onClick={this.props.writeTemplate} />
         </div>
       </div>
     )
