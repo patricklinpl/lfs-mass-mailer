@@ -10,50 +10,34 @@ export default class PreviewContact extends Component {
       previewData: props.previewData
     }
     this.tableBuilder = this.tableBuilder.bind(this)
-    this.getHeaders = this.getHeaders.bind(this)
-    this.getRowData = this.getRowData.bind(this)
+    this.cellBuilder = this.cellBuilder.bind(this)
+  }
+
+  cellBuilder (data, type) {
+    const store = []
+    const headers = this.props.headers
+    for (let i = 0; i < headers.length; i++) {
+      store.push(<Cell minWidthPx={100} key={`cell${i + 1}`}>{type === 'head' ? headers[i] : data[headers[i]]}</Cell>)
+    }
+    return store
   }
 
   tableBuilder (data) {
     const tableArray = []
     if (data.length > 0) {
-      const headerRow = <Row header key='row1'>{this.getHeaders(data)}</Row>
+      const headerRow = <Row header key='row1'>{this.cellBuilder(data, 'head')}</Row>
       tableArray.push(headerRow)
       for (let i = 0; i < (data.length > 10 ? 10 : data.length); i++) {
-        tableArray.push(<Row striped key={`row${i + 2}`}>{this.getRowData(data[i])}</Row>)
+        tableArray.push(<Row striped key={`row${i + 2}`}>{this.cellBuilder(data[i], 'row')}</Row>)
       }
     }
-    return tableArray.map(row => row)
-  }
-
-  getHeaders (data) {
-    const headerArray = []
-    if (data.length > 0) {
-      const headers = Object.keys(data[0])
-      for (let i = 0; i < headers.length; i++) {
-        headerArray.push(<Cell minWidthPx={100} key={`cell${i + 1}`}>{headers[i]}</Cell>)
-      }
-    }
-    return headerArray.map(head => head)
-  }
-
-  getRowData (data) {
-    const rowArray = []
-    if (data) {
-      const headers = Object.keys(data)
-      for (let i = 0; i < headers.length; i++) {
-        rowArray.push(<Cell minWidthPx={100} key={`cell${i + 1}`}>{data[headers[i]]}</Cell>)
-      }
-    }
-    return rowArray.map(row => row)
+    return tableArray
   }
 
   render () {
     return (
       <div>
-        <MenuBar
-          title='Preview of the First Ten Rows'
-        />
+        <MenuBar title='Preview of the First Ten Rows' />
         <div className='md-table'>
           <Table material className='md-table'>
             {this.tableBuilder(this.state.csv)}

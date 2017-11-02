@@ -79,6 +79,7 @@ export default class Controller extends Component {
         {(Array.isArray(this.state.data) && this.state.previewData === true)
         ? <PreviewContact
           writeTemplate={this.writeTemplate.bind(this)}
+          headers={this.state.headers}
           data={this.state.data}
           previewData={this.state.previewData}
         /> : null}
