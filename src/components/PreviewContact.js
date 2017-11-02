@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Table, Row, Cell } from 'react-responsive-table'
+import MenuBar from '../components/MenuBar'
 
 export default class PreviewContact extends Component {
   constructor (props) {
@@ -50,7 +51,9 @@ export default class PreviewContact extends Component {
   render () {
     return (
       <div>
-        <h2>Preview of the First Ten Rows</h2>
+        <MenuBar
+          title='Preview of the First Ten Rows'
+        />
         <div className='md-table'>
           <Table material className='md-table'>
             {this.tableBuilder(this.state.csv)}

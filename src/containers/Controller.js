@@ -24,44 +24,37 @@ export default class Controller extends Component {
   }
 
   getHeaders (data) {
-    if (Array.isArray(data)) {
-      this.setState({ headers: Object.keys(data[0]) })
-    }
+    Array.isArray(data) && this.setState({ headers: Object.keys(data[0]) })
   }
 
   handleUpload (state) {
     return event => {
       event.preventDefault()
-      this.setState({ loading: true })
+      const xhr = new XMLHttpRequest()
       let FD = new FormData()
       for (let name in state) {
         FD.append(name, state[name])
       }
-      const xhr = new XMLHttpRequest()
+      this.setState({ loading: true })
       xhr.onload = () => {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          const json = JSON.parse(xhr.response)
-          if (json.csv) {
-            this.getHeaders(json.csv)
-            this.setState({
-              uploadCSV: true,
-              data: json.csv,
-              previewData: true,
-              loading: false
-            })
-          }
-        }
-        if (xhr.readyState === 4 && xhr.status === 404) {
-          const json = JSON.parse(xhr.response)
-          this.setState({ loading: false })
-          if (typeof json.msg.code === 'undefined') {
-            if (typeof json.msg.storageErrors === 'undefined') {
-              alert('Error: ' + json.msg)
-            } else {
-              alert('Error: Unsupported File Type! ')
+        if (xhr.readyState === 4) {
+          const response = JSON.parse(xhr.response)
+          if (xhr.status === 200) {
+            if (response.csv) {
+              this.getHeaders(response.csv)
+              this.setState({ uploadCSV: true, data: response.csv, previewData: true, loading: false })
             }
-          } else {
-            alert('Error: File is too large!')
+          } else if (xhr.status === 404) {
+            this.setState({ loading: false })
+            if (typeof response.msg.code === 'undefined') {
+              if (typeof response.msg.storageErrors === 'undefined') {
+                alert('Error: ' + response.msg)
+              } else {
+                alert('Error: Unsupported File Type! ')
+              }
+            } else {
+              alert('Error: File is too large!')
+            }
           }
         }
       }
@@ -71,22 +64,11 @@ export default class Controller extends Component {
   }
 
   writeTemplate () {
-    this.setState({
-      uploadCSV: true,
-      previewData: false,
-      uploadTemplate: true
-    })
+    this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true })
   }
 
   handleTemplate (text, headers) {
-    this.setState({
-      uploadCSV: true,
-      previewData: false,
-      uploadTemplate: false,
-      previewTemplate: true,
-      template: text,
-      tempHeaders: headers
-    })
+    this.setState({ uploadCSV: true, previewData: false, uploadTemplate: false, previewTemplate: true, template: text, tempHeaders: headers })
   }
 
   render () {
