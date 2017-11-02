@@ -67,6 +67,10 @@ export default class Controller extends Component {
     this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true })
   }
 
+  backToUpload () {
+    this.setState({ uploadCSV: false, previewData: false, data: null, headers: null })
+  }
+
   handleTemplate (text, headers) {
     this.setState({ uploadCSV: true, previewData: false, uploadTemplate: false, previewTemplate: true, template: text, tempHeaders: headers })
   }
@@ -79,6 +83,7 @@ export default class Controller extends Component {
         {(Array.isArray(this.state.data) && this.state.previewData === true)
         ? <PreviewContact
           writeTemplate={this.writeTemplate.bind(this)}
+          backToUpload={this.backToUpload.bind(this)}
           headers={this.state.headers}
           data={this.state.data}
           previewData={this.state.previewData}

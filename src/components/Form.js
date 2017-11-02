@@ -2,6 +2,22 @@ import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
 import { Table, Row, Cell } from 'react-responsive-table'
 
+const styles = {
+  button: {
+    margin: 12
+  },
+  fileInput: {
+    cursor: 'pointer',
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
+    width: '100%',
+    opacity: 0
+  }
+}
+
 export default class Form extends Component {
   constructor (props) {
     super(props)
@@ -14,21 +30,6 @@ export default class Form extends Component {
   }
 
   render () {
-    const styles = {
-      button: {
-        margin: 12
-      },
-      fileInput: {
-        cursor: 'pointer',
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
-        right: 0,
-        left: 0,
-        width: '100%',
-        opacity: 0
-      }
-    }
     return (
       <div className='form'>
         <form onSubmit={this.props.handleUpload(this.state)}>

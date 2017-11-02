@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
+import RaisedButton from 'material-ui/RaisedButton'
 
 export default class PreviewContact extends Component {
   constructor (props) {
@@ -44,7 +45,8 @@ export default class PreviewContact extends Component {
           </Table>
           <br />
           <div className='control-buttons'>
-            <button onClick={this.props.writeTemplate}> Next </button>
+            <RaisedButton label='Back' onClick={this.props.backToUpload} />
+            <RaisedButton label='Next' primary onClick={this.props.writeTemplate} />
           </div>
         </div>
       </div>
