@@ -49,13 +49,16 @@ export default class PreviewContact extends Component {
 
   render () {
     return (
-      <div className='md-table'>
-        <Table material className='md-table'>
-          {this.tableBuilder(this.state.csv)}
-        </Table>
-        <br />
-        <div className='control-buttons'>
-          <button onClick={this.props.writeTemplate}> Next </button>
+      <div>
+        <h2>Preview of the First Ten Rows</h2>
+        <div className='md-table'>
+          <Table material className='md-table'>
+            {this.tableBuilder(this.state.csv)}
+          </Table>
+          <br />
+          <div className='control-buttons'>
+            <button onClick={this.props.writeTemplate}> Next </button>
+          </div>
         </div>
       </div>
     )

@@ -13,9 +13,10 @@ routes.post('/api/form', (req, res) => {
       readCSV(req.file, (error, data) => {
         if (error) {
           console.log(error)
-          res.status(404).send({ type: 'error', msg: err })
+          res.status(404).send({ type: 'error', msg: 'No File Uploaded!' })
+        } else {
+          res.status(200).send({csv: data})
         }
-        res.status(200).send({csv: data})
       })
     }
   })

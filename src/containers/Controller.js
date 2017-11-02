@@ -54,10 +54,14 @@ export default class Controller extends Component {
         if (xhr.readyState === 4 && xhr.status === 404) {
           const json = JSON.parse(xhr.response)
           this.setState({ loading: false })
-          if (json.msg.code) {
-            alert('File is too large!')
+          if (typeof json.msg.code === 'undefined') {
+            if (typeof json.msg.storageErrors === 'undefined') {
+              alert('Error: ' + json.msg)
+            } else {
+              alert('Error: Unsupported File Type! ')
+            }
           } else {
-            alert('Please upload a .csv file!')
+            alert('Error: File is too large!')
           }
         }
       }
@@ -90,7 +94,6 @@ export default class Controller extends Component {
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
         {this.state.uploadCSV === false ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
-        {this.state.loading === true ? <Loading /> : null}
         {(Array.isArray(this.state.data) && this.state.previewData === true)
         ? <PreviewContact
           writeTemplate={this.writeTemplate.bind(this)}
@@ -109,6 +112,7 @@ export default class Controller extends Component {
           tempHeaders={this.state.tempHeaders}
           data={this.state.data}
         /> : null}
+        {this.state.loading === true ? <Loading /> : null}
       </div>
     )
   }

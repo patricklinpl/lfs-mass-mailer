@@ -1,8 +1,5 @@
 import React, { Component } from 'react'
 import ReactQuill from 'react-quill'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { Table, Row, Cell } from 'react-responsive-table'
 
 export default class Template extends Component {
@@ -51,13 +48,11 @@ export default class Template extends Component {
       <div>
         <p>The following are identifers you can use:</p>
         <div className='md-table'>
-          <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
-            <Table material className='md-table'>
-              <Row header key='row'>
-                {this.buildIdentifer()}
-              </Row>
-            </Table>
-          </MuiThemeProvider>
+          <Table material className='md-table'>
+            <Row header key='row'>
+              {this.buildIdentifer()}
+            </Row>
+          </Table>
         </div>
         <div>
           <ReactQuill
