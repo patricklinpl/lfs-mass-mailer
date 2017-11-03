@@ -3,7 +3,6 @@ import { userUpload } from './upload'
 import { readCSV } from './parser'
 import { sendEmail } from './email'
 
-
 const routes = Router()
 
 routes.post('/api/form', (req, res) => {
@@ -27,7 +26,7 @@ routes.post('/api/form', (req, res) => {
 routes.post('/api/send-email', (req, res) => {
   sendEmail(() => {
     res.status(200).send('success')
-  } )
+  })
 })
 
 export default routes

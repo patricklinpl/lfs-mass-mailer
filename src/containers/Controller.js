@@ -71,7 +71,7 @@ export default class Controller extends Component {
       this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true })
     }
   }
-  
+
   backToUpload () {
     this.setState({ uploadCSV: false, previewData: false, data: null, headers: null, emailHeader: null })
   }
