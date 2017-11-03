@@ -10,7 +10,7 @@ export default class PreviewContact extends Component {
     super(props)
     this.state = {
       csv: props.data,
-      previewData: props.previewData,
+      previewData: props.previewData
     }
     this.tableBuilder = this.tableBuilder.bind(this)
     this.cellBuilder = this.cellBuilder.bind(this)
