@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
 import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 
@@ -51,6 +52,7 @@ export default class PreviewContact extends Component {
     return (
       <div>
         <MenuBar title='Preview of the First Ten Rows' />
+        <br />
         <div className='md-table'>
           <Table material className='md-table'>
             {this.tableBuilder(this.state.csv)}
@@ -67,7 +69,7 @@ export default class PreviewContact extends Component {
         <br />
         <br />
         <div className='control-buttons'>
-          <RaisedButton label='Back' onClick={this.props.backToUpload} />
+          <FlatButton label='Back' onClick={this.props.backToUpload} />
           <RaisedButton label='Next' primary onClick={this.props.writeTemplate} />
         </div>
       </div>
