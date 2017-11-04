@@ -5,6 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
+import Paper from 'material-ui/Paper'
 
 export default class PreviewContact extends Component {
   constructor (props) {
@@ -42,7 +43,7 @@ export default class PreviewContact extends Component {
       const headerRow = <Row header key='row1'>{this.cellBuilder(data, 'head')}</Row>
       tableArray.push(headerRow)
       for (let i = 0; i < (data.length > 10 ? 10 : data.length); i++) {
-        tableArray.push(<Row striped key={`row${i + 2}`}>{this.cellBuilder(data[i], 'row')}</Row>)
+        tableArray.push(<Row key={`row${i + 2}`}>{this.cellBuilder(data[i], 'row')}</Row>)
       }
     }
     return tableArray
@@ -53,25 +54,28 @@ export default class PreviewContact extends Component {
       <div>
         <MenuBar title='Preview of the First Ten Rows' />
         <br />
-        <div className='md-table'>
-          <Table material className='md-table'>
-            {this.tableBuilder(this.state.csv)}
-          </Table>
-        </div>
-        <br />
-        <br />
+        <Paper zDepth={2}>
+          <br /> <br />
+          <div className='md-table'>
+            <Table material className='md-table'>
+              {this.tableBuilder(this.state.csv)}
+            </Table>
+          </div>
+          <br /> <br />
+        </Paper>
+        <br /> <br />
         <div className='control-buttons' >
           <SelectField floatingLabelText='Select Email Identifier' value={this.props.emailHeader} onChange={this.props.selectEmail}>
             <MenuItem value={null} primaryText='' />
             {this.dropDownBuilder()}
           </SelectField>
         </div>
-        <br />
-        <br />
+        <br /> <br />
         <div className='control-buttons'>
           <FlatButton label='Back' onClick={this.props.backToUpload} />
           <RaisedButton label='Next' primary onClick={this.props.writeTemplate} />
         </div>
+        <br /> <br />
       </div>
     )
   }
