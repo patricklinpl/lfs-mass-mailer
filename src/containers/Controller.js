@@ -1,4 +1,4 @@
-/* global XMLHttpRequest, FormData, alert */
+/* global XMLHttpRequest, FormData */
 import React, { Component } from 'react'
 import Form from '../components/Form'
 import PreviewContact from '../components/PreviewContact'
@@ -23,11 +23,13 @@ export default class Controller extends Component {
       template: null,
       loading: false,
       open: false,
-      errormsg: ''
+      errormsg: '',
+      validateEmail: []
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleOpen = this.handleOpen.bind(this)
     this.handleClose = this.handleClose.bind(this)
+    this.validateEmail = this.validateEmail.bind(this)
   }
 
   handleOpen () {
@@ -78,11 +80,25 @@ export default class Controller extends Component {
     }
   }
 
+  validateEmail (email) {
+    const verify = /\S+@\S+\.\S+/
+    return verify.test(email)
+  }
+
   writeTemplate () {
     if (!this.state.emailHeader) {
       this.setState({ open: true, errormsg: 'Please Select an Identifier' })
     } else {
-      this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true })
+      const emails = []
+      const invalidEmails = []
+      this.state.data.forEach(row => {
+        this.validateEmail(row[this.state.emailHeader]) ? emails.push(row[this.state.emailHeader]) : invalidEmails.push(row[this.state.emailHeader])
+      })
+      if (emails.length !== this.state.data.length) {
+        invalidEmails.length === this.state.data.length ? this.setState({ open: true, errormsg: `Invalid Email Identifier: All rows are invalid` }) : this.setState({ open: true, errormsg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
+      } else {
+        this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true, validateEmail: emails })
+      }
     }
   }
 
