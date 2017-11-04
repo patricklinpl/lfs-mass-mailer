@@ -2,6 +2,33 @@ import React, { Component } from 'react'
 import ReactQuill from 'react-quill'
 import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
+import Paper from 'material-ui/Paper'
+
+const modules = {
+  toolbar: [
+    [{ 'header': '1'}, { 'header': '2' }, { 'font': [] }], [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' },
+    { 'indent': '-1' }, { 'indent': '+1' }],
+    ['link', 'image', 'video'],
+    ['clean']],
+  clipboard: {
+    matchVisual: false
+  }
+}
+
+const formats = [
+  'header', 'font', 'size',
+  'bold', 'italic', 'underline', 'strike', 'blockquote',
+  'list', 'bullet', 'indent',
+  'link', 'image', 'video'
+]
+
+const styles = {
+  textArea: {
+    height: 300
+  }
+}
 
 export default class Template extends Component {
   constructor (props) {
@@ -66,27 +93,37 @@ export default class Template extends Component {
       <div>
         <MenuBar title='The following are identifers you can use:' />
         <br /><br />
-        <div className='md-table'>
-          <Table material className='md-table'>
-            <Row header key='row'>
-              {this.buildIdentifer()}
-            </Row>
-          </Table>
-        </div>
+        <Paper zDepth={2}>
+          <div className='md-table'>
+            <Table material className='md-table'>
+              <Row header key='row'>
+                {this.buildIdentifer()}
+              </Row>
+            </Table>
+          </div>
+        </Paper>
         <br /><br />
         <MenuBar title='Write Your Template' />
         <br /><br />
-        <div>
-          <ReactQuill
-            value={this.state.text}
-            onChange={this.handleChange} />
-        </div>
+        <Paper zDepth={2}>
+          <div>
+            <ReactQuill
+              value={this.state.text}
+              onChange={this.handleChange}
+              modules={modules}
+              formats={formats}
+              style={styles.textArea}
+              />
+          </div>
+        </Paper>
         <br /><br />
         <MenuBar title='Live Preview' expandable />
         <br /><br />
-        <div className='box'>
-          <div dangerouslySetInnerHTML={{ __html: this.getSampleData() }} />
-        </div>
+        <Paper zDepth={2}>
+          <div className='preview'>
+            <div dangerouslySetInnerHTML={{ __html: this.getSampleData() }} />
+          </div>
+        </Paper>
         <div className='control-buttons'>
           <button onClick={this.handleTemplate}> Preview </button>
         </div>

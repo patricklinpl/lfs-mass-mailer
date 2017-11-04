@@ -15,6 +15,16 @@
   padding: 25px;
 }
 
+.preview {
+  width: auto;
+  border: 2px;
+  padding: 25px;
+}
+
+.text-area {
+  height: 300px;
+}
+
 input[type="file"] {
   line-height: 10px;
 }
