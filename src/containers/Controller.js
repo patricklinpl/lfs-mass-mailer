@@ -3,7 +3,6 @@ import React, { Component } from 'react'
 import Form from '../components/Form'
 import PreviewContact from '../components/PreviewContact'
 import Template from '../components/Template'
-import PreviewTemplate from '../components/PreviewTemplate'
 import Loading from '../components/Loading'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
@@ -24,21 +23,39 @@ export default class Controller extends Component {
       loading: false,
       open: false,
       errormsg: '',
-      validateEmail: []
+      validateEmail: [],
+      confirm: false
     }
     this.getHeaders = this.getHeaders.bind(this)
-    this.handleOpen = this.handleOpen.bind(this)
     this.handleClose = this.handleClose.bind(this)
     this.validateEmail = this.validateEmail.bind(this)
+    this.sendEmail = this.sendEmail.bind(this)
+    this.closeAndSend = this.closeAndSend.bind(this)
+    this.cancelSend = this.cancelSend.bind(this)
   }
 
-  handleOpen () {
-    this.setState({open: true})
+  sendEmail () {
+    const xhr = new XMLHttpRequest()
+    xhr.onload = () => {
+      if (xhr.readyState === 4) {
+        const response = JSON.parse(xhr.response)
+        if (xhr.status === 200) {
+          console.log(response)
+          this.setState({ loading: false })
+        } else if (xhr.status === 404) {
+          console.log(response)
+          this.setState({ loading: false })
+        }
+      }
+    }
+    xhr.open('POST', 'api/send-email')
+    xhr.send(this.state.data)
   }
 
-  handleClose () {
-    this.setState({open: false})
-  }
+  /**
+   * Form.js Functions
+   * ============
+  */
 
   getHeaders (data) {
     Array.isArray(data) && this.setState({ headers: Object.keys(data[0]) })
@@ -80,6 +97,13 @@ export default class Controller extends Component {
     }
   }
 
+  /** ============ */
+
+  /**
+   * PreviewContact.js Functions
+   * ============
+  */
+
   validateEmail (email) {
     const verify = /\S+@\S+\.\S+/
     return verify.test(email)
@@ -106,13 +130,56 @@ export default class Controller extends Component {
     this.setState({ uploadCSV: false, previewData: false, data: null, headers: null, emailHeader: null })
   }
 
+  selectEmail (event, index, value) {
+    this.setState({emailHeader: value})
+  }
+
+  /** ============ */
+
+  /**
+   * Template.js Functions
+   * ============
+  */
+
+  backToContactPrev () {
+    this.setState({ uploadCSV: true, previewData: true, uploadTemplate: false, emailHeader: null, validateEmail: null })
+  }
+
   handleTemplate (text, headers) {
     this.setState({ uploadCSV: true, previewData: false, uploadTemplate: false, previewTemplate: true, template: text, tempHeaders: headers })
   }
 
-  selectEmail (event, index, value) {
-    this.setState({emailHeader: value})
+  /** ============ */
+
+  /**
+   * Error Dialog
+   * ============
+  */
+
+  handleClose () {
+    this.setState({open: false})
   }
+
+  /** ============ */
+
+  /**
+   * Send Dialog
+   * ============
+  */
+
+  closeAndSend () {
+    this.setState({ loading: true, confirm: false }, this.sendEmail())
+  }
+
+  confirmSend () {
+    this.setState({ confirm: true })
+  }
+
+  cancelSend () {
+    this.setState({ confirm: false })
+  }
+
+  /** ============ */
 
   render () {
     const actions = [
@@ -122,6 +189,17 @@ export default class Controller extends Component {
         onClick={this.handleClose}
       />
     ]
+    const send = [
+      <FlatButton
+        label='Cancel'
+        primary
+        onClick={this.cancelSend}
+        />,
+      <FlatButton
+        label='Send'
+        primary
+        onClick={this.closeAndSend}
+        />]
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
@@ -130,10 +208,17 @@ export default class Controller extends Component {
           actions={actions}
           modal={false}
           open={this.state.open}
-          onRequestClose={this.handleClose}
-          >
+          onRequestClose={this.handleClose}>
           {this.state.errormsg}
         </Dialog>
+        <Dialog
+          title='Confirmation'
+          actions={send}
+          modal={false}
+          open={this.state.confirm}
+          onRequestClose={this.cancelSend}>
+          Are you sure you want to send this email?
+          </Dialog>
         {this.state.uploadCSV === false ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
         {(Array.isArray(this.state.data) && this.state.previewData === true)
         ? <PreviewContact
@@ -149,15 +234,10 @@ export default class Controller extends Component {
           ? <Template
             data={this.state.data}
             handleTemplate={this.handleTemplate.bind(this)}
+            backToContactPrev={this.backToContactPrev.bind(this)}
+            confirmSend={this.confirmSend.bind(this)}
             headers={this.state.headers}
           /> : null}
-        {this.state.previewTemplate === true
-        ? <PreviewTemplate
-          template={this.state.template}
-          headers={this.state.headers}
-          tempHeaders={this.state.tempHeaders}
-          data={this.state.data}
-        /> : null}
         {this.state.loading === true ? <Loading /> : null}
       </div>
     )

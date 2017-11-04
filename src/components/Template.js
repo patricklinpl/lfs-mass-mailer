@@ -3,10 +3,12 @@ import ReactQuill from 'react-quill'
 import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
 import Paper from 'material-ui/Paper'
+import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
 
 const modules = {
   toolbar: [
-    [{ 'header': '1'}, { 'header': '2' }, { 'font': [] }], [{ size: [] }],
+    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }], [{ size: [] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
     [{ 'list': 'ordered' }, { 'list': 'bullet' },
     { 'indent': '-1' }, { 'indent': '+1' }],
@@ -124,9 +126,12 @@ export default class Template extends Component {
             <div dangerouslySetInnerHTML={{ __html: this.getSampleData() }} />
           </div>
         </Paper>
+        <br /> <br />
         <div className='control-buttons'>
-          <button onClick={this.handleTemplate}> Preview </button>
+          <FlatButton label='Back' onClick={this.props.backToContactPrev} />
+          <RaisedButton label='Send' primary onClick={this.props.confirmSend} />
         </div>
+        <br /> <br />
       </div>
     )
   }
