@@ -80,7 +80,7 @@ export default class Controller extends Component {
 
   writeTemplate () {
     if (!this.state.emailHeader) {
-      alert('Please Select an Identifier')
+      this.setState({ open: true, errormsg: 'Please Select an Identifier' })
     } else {
       this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true })
     }
