@@ -1,6 +1,4 @@
-# React on Express.js with Babel Boilerplate
-
-A merge between [express-babel](https://github.com/vmasto/express-babel) with [create-react-app](https://github.com/facebookincubator/create-react-app)
+# lfs-mass-mailer
 
 ## Quick Overview 
 
@@ -14,9 +12,35 @@ npm install
 npm run start-react
 ```
 
-### Production
+### Local Dev & Production
 
 ```sh
 npm run build-react
 npm run start
 ```
+
+## Setup SMTP server
+
+### Create .env
+
+Create `.env` file and specify the following:
+
+```
+ACCOUNT_USER=
+ACCOUNT_PASS=
+ACCOUNT_EMAIL=
+ACCOUNT_NAME=
+EMAIL_HOST=
+EMAIL_PORT=
+EMAIL_SECURE=
+```
+
+Property	|	Type	|	Description
+:-----------------------|:--------------|:--------------------------------
+ACCOUNT_USER	|	string	|	account login username 
+ACCOUNT_PASS | string  | account login password 
+ACCOUNT_EMAIL	|	string	|	account email
+ACCOUNT_NAME | string | user's full name
+EMAIL_HOST	|	string	|	host server 
+EMAIL_PORT | number | port number
+EMAIL_SECURE	|	bool |	specify false. if `EMAIL_PORT` = `465`, specify true
