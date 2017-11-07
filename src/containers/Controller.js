@@ -39,7 +39,7 @@ export default class Controller extends Component {
   sendEmail () {
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'api/send-email', true)
-    xhr.setRequestHeader("Content-type", "application/json")    
+    xhr.setRequestHeader('Content-type', 'application/json')
     xhr.onload = () => {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response)

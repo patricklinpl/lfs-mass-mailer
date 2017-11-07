@@ -55,5 +55,5 @@ const sendEmail = (mailOptions) => {
 }
 
 export {
-    sendEmail
+  parseData
 }
