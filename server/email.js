@@ -31,9 +31,9 @@ const parseData = (state) => {
 const sendEmail = (mailOptions) => {
   nodemailer.createTestAccount((err, account) => {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.mail.ubc.ca',
-      port: 465,
-      secure: true,
+      host: process.env.EMAIL_HOST,
+      port: EMAIL_PORT,
+      secure: process.env.EMAIL_SECURE,
       auth: {
         user: process.env.ACCOUNT_USER,
         pass: process.env.ACCOUNT_PASS
