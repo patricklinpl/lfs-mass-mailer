@@ -5,6 +5,7 @@ import MenuBar from '../components/MenuBar'
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
+import TextField from 'material-ui/TextField'
 
 const modules = {
   toolbar: [
@@ -36,12 +37,14 @@ export default class Template extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      text: '<p>Hello %First Name%</p>',
+      text: `<p>Hello %${props.headers[0]}%</p>`,
       headers: props.headers,
       idHeaders: null,
-      data: props.data
+      data: props.data,
+      subject: ''
     }
     this.handleChange = this.handleChange.bind(this)
+    this.handleSubject = this.handleSubject.bind(this)
     this.buildIdentifer = this.buildIdentifer.bind(this)
     this.handleTemplate = this.handleTemplate.bind(this)
     this.buildHeaders = this.buildHeaders.bind(this)
@@ -51,6 +54,10 @@ export default class Template extends Component {
 
   handleChange (value) {
     this.setState({ text: value })
+  }
+
+  handleSubject (event) {
+    this.setState({ subject: event.target.value })
   }
 
   buildHeaders () {
@@ -77,14 +84,15 @@ export default class Template extends Component {
   }
 
   replaceAll (str, find, replace) {
-    return str.replace(new RegExp(find, 'g'), replace)
+    return str.replace(new RegExp(find, 'ig'), replace)
   }
 
   getSampleData () {
     let preview = this.state.text
     this.state.headers.forEach(head => {
-      if (this.buildHeaders().id.includes(`%${head}%`)) {
-        preview = this.replaceAll(preview, `%${head}%`, this.state.data[0][head])
+      const identifer = `%${head}%`
+      if (this.buildHeaders().id.includes(identifer)) {
+        preview = this.replaceAll(preview, identifer, this.state.data[0][head])
       }
     })
     return preview
@@ -106,6 +114,14 @@ export default class Template extends Component {
         </Paper>
         <br /><br />
         <MenuBar title='Write Your Template' />
+        <br /><br />
+        <div>
+          <TextField
+            floatingLabelText='Subject'
+            fullWidth
+            value={this.state.subject}
+            onChange={this.handleSubject} />
+        </div>
         <br /><br />
         <Paper zDepth={2}>
           <div>
@@ -129,7 +145,7 @@ export default class Template extends Component {
         <br /> <br />
         <div className='control-buttons'>
           <FlatButton label='Back' onClick={this.props.backToContactPrev} />
-          <RaisedButton label='Send' primary onClick={this.props.confirmSend} />
+          <RaisedButton label='Send' primary onClick={() => this.props.confirmSend(this.state.text, this.state.subject)} />
         </div>
         <br /> <br />
       </div>

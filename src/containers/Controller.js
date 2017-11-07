@@ -24,7 +24,9 @@ export default class Controller extends Component {
       open: false,
       errormsg: '',
       validateEmail: [],
-      confirm: false
+      confirm: false,
+      body: '',
+      subject: ''
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -36,6 +38,8 @@ export default class Controller extends Component {
 
   sendEmail () {
     const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'api/send-email', true)
+    xhr.setRequestHeader("Content-type", "application/json")    
     xhr.onload = () => {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response)
@@ -48,8 +52,7 @@ export default class Controller extends Component {
         }
       }
     }
-    xhr.open('POST', 'api/send-email')
-    xhr.send(this.state.data)
+    xhr.send(JSON.stringify({ data: this.state.data, emailID: this.state.emailHeader, subject: this.state.subject, html: this.state.body }))
   }
 
   /**
@@ -171,8 +174,8 @@ export default class Controller extends Component {
     this.setState({ loading: true, confirm: false }, this.sendEmail())
   }
 
-  confirmSend () {
-    this.setState({ confirm: true })
+  confirmSend (text, subject) {
+    subject === '' ? this.setState({ open: true, errormsg: 'Subject is required!' }) : this.setState({ confirm: true, body: text, subject: subject })
   }
 
   cancelSend () {

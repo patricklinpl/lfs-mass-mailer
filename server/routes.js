@@ -24,9 +24,11 @@ routes.post('/api/form', (req, res) => {
 })
 
 routes.post('/api/send-email', (req, res) => {
-  sendEmail(() => {
-    res.status(200).send('success')
-  })
+  console.log(req.body)
+  // sendEmail(() => {
+  //   res.status(200).send('success')
+  // })
+  res.status(200).send('success')
 })
 
 export default routes
