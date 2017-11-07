@@ -1,4 +1,6 @@
-# lfs-mass-mailer
+# Mass Mailer
+
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
 ## Quick Overview 
 
