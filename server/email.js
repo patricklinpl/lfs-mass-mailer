@@ -1,7 +1,34 @@
 import nodemailer from 'nodemailer'
 require('dotenv').config()
 
-const sendEmail = () => {
+const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(find, 'ig'), replace)
+}
+
+const makeBody = (contact, html, headers) => {
+  let personalBody = html
+  headers.forEach(head => {
+    const identifer = `%${head}%`
+    personalBody = replaceAll(personalBody, identifer, contact[head])
+  })
+  return personalBody
+}
+
+const parseData = (state) => {
+  const email = state.emailID
+  state.data.forEach(contact => {
+    const body = makeBody(contact, state.html, state.headers)
+    const mailOptions = {
+      from: `${process.env.ACCOUNT_NAME} <${process.env.ACCOUNT_EMAIL}>`,
+      to: contact[email],
+      subject: state.subject,
+      html: body
+    }
+    sendEmail(mailOptions)
+  })
+}
+
+const sendEmail = (mailOptions) => {
   nodemailer.createTestAccount((err, account) => {
     const transporter = nodemailer.createTransport({
       host: 'smtp.mail.ubc.ca',
@@ -17,15 +44,6 @@ const sendEmail = () => {
       return console.log(err)
     }
 
-    const mailOptions = {
-      from: '"Patrick Lin 👻" <patrick.lin@sauder.ubc.ca>',
-      to: 'Plin, paatricklinn@gmail.com',
-      subject: 'Hello ✔',
-      text: 'Hello world?',
-      html: '<b>Hello world?</b>'
-    }
-
-    // send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
         return console.log(error)

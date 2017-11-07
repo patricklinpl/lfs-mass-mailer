@@ -52,7 +52,7 @@ export default class Controller extends Component {
         }
       }
     }
-    xhr.send(JSON.stringify({ data: this.state.data, emailID: this.state.emailHeader, subject: this.state.subject, html: this.state.body }))
+    xhr.send(JSON.stringify({ data: this.state.data, emailID: this.state.emailHeader, headers: this.state.headers, subject: this.state.subject, html: this.state.body }))
   }
 
   /**

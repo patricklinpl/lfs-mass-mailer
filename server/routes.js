@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { userUpload } from './upload'
 import { readCSV } from './parser'
-import { sendEmail } from './email'
+import { parseData } from './email'
 
 const routes = Router()
 
@@ -24,11 +24,9 @@ routes.post('/api/form', (req, res) => {
 })
 
 routes.post('/api/send-email', (req, res) => {
-  console.log(req.body)
-  // sendEmail(() => {
-  //   res.status(200).send('success')
-  // })
-  res.status(200).send('success')
+  parseData(req.body, (error, msg) => {
+    res.status(200).send('success')
+  })
 })
 
 export default routes
