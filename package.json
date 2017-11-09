@@ -12,7 +12,7 @@
   },
   "scripts": {
     "prestart": "npm run -s build",
-    "start": "react-scripts start",
+    "start": "node dist/index.js",
     "build": "npm run clean && mkdir -p dist && babel server -s -D -d dist",
     "start-react": "react-scripts start",
     "build-react": "rm -rf public/build && react-scripts build && mv build public",
