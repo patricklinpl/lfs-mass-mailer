@@ -32,7 +32,7 @@ const sendEmail = (mailOptions) => {
   nodemailer.createTestAccount((err, account) => {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
-      port: EMAIL_PORT,
+      port: process.env.EMAIL_PORT,
       secure: process.env.EMAIL_SECURE,
       auth: {
         user: process.env.ACCOUNT_USER,
