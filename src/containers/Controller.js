@@ -6,6 +6,8 @@ import Template from '../components/Template'
 import Loading from '../components/Loading'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
+import Success from '../components/Success'
+import Paper from 'material-ui/Paper'
 
 export default class Controller extends Component {
   constructor (props) {
@@ -26,7 +28,8 @@ export default class Controller extends Component {
       validateEmail: [],
       confirm: false,
       body: '',
-      subject: ''
+      subject: '',
+      success: false
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -36,7 +39,12 @@ export default class Controller extends Component {
     this.cancelSend = this.cancelSend.bind(this)
   }
 
+  reset () {
+    this.setState({ body: '', data: null, emailHeader: null, headers: null, subject: '', success: false, uploadCSV: false, validateEmail: null })
+  }
+
   sendEmail () {
+    this.setState({ uploadTemplate: false })
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'api/send-email', true)
     xhr.setRequestHeader('Content-type', 'application/json')
@@ -45,7 +53,7 @@ export default class Controller extends Component {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200) {
           console.log(response)
-          this.setState({ loading: false })
+          this.setState({ loading: false, success: true })
         } else if (xhr.status === 404) {
           console.log(response)
           this.setState({ loading: false })
@@ -242,6 +250,13 @@ export default class Controller extends Component {
             headers={this.state.headers}
           /> : null}
         {this.state.loading === true ? <Loading /> : null}
+        {this.state.success === true ? <Success reset={this.reset.bind(this)} /> : null}
+        <div className='footer'>
+          <Paper style={{margin: 20, padding: 20}} >
+            <p>For assistance contact <a href='mailto:it@landfood.ubc.ca' target='_top'>it@landfood.ubc.ca</a></p>
+            <a href='https://secure.landfood.ubc.ca/Shibboleth.sso/Logout?return=http://dietetics.landfood.ubc.ca' >CWL LOGOUT</a>
+          </Paper>
+        </div>
       </div>
     )
   }

@@ -43,3 +43,13 @@ input[type="file"] {
 .control-buttons {
   text-align: center;
 }
+
+.center-img {
+  display: block;
+  margin: auto;
+  width: 25%;
+}
+
+.footer {
+  text-align:right;
+}

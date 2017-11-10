@@ -14,8 +14,9 @@ const makeBody = (contact, html, headers) => {
   return personalBody
 }
 
-const parseData = (state) => {
+const parseData = (state, callback) => {
   const email = state.emailID
+  let error = false
   state.data.forEach(contact => {
     const body = makeBody(contact, state.html, state.headers)
     const mailOptions = {
@@ -24,33 +25,43 @@ const parseData = (state) => {
       subject: state.subject,
       html: body
     }
-    sendEmail(mailOptions)
+    sendEmail(mailOptions, (err) => {
+      if (err) {
+        error = true
+        callback(err)
+      }
+    })
   })
+  if (error === false) {
+    callback(null)
+  }
 }
 
-const sendEmail = (mailOptions) => {
-  nodemailer.createTestAccount((err, account) => {
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: process.env.EMAIL_SECURE,
-      auth: {
-        user: process.env.ACCOUNT_USER,
-        pass: process.env.ACCOUNT_PASS
-      }
-    })
-
-    if (err) {
-      return console.log(err)
+const sendEmail = (mailOptions, cb) => {
+  const transporter = nodemailer.createTransport({
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE,
+    auth: {
+      user: process.env.ACCOUNT_USER,
+      pass: process.env.ACCOUNT_PASS
     }
+  })
 
-    transporter.sendMail(mailOptions, (error, info) => {
-      if (error) {
-        return console.log(error)
-      }
-      console.log('Message sent: %s', info.messageId)
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
-    })
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log('Server is ready to take our messages')
+    }
+  })
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      cb(error)
+      return
+    }
+    return console.log('Message sent: %s', info.messageId)
   })
 }
 
