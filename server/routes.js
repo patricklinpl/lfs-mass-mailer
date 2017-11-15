@@ -6,18 +6,15 @@ import { parseData } from './email'
 const routes = Router()
 
 routes.post('/api/form', (req, res) => {
-  userUpload(req, res, (err) => {
-    if (err) {
-      console.log(err)
-      res.status(404).send({ type: 'error', msg: err })
+  userUpload(req, res, (e) => {
+    if (e) {
+      console.log(e)
+      res.status(404).send({ type: 'error', msg: e.message })
     } else {
-      readCSV(req.file, (error, data) => {
-        if (error) {
-          console.log(error)
-          res.status(404).send({ type: 'error', msg: 'No File Uploaded!' })
-        } else {
-          res.status(200).send({csv: data})
-        }
+      readCSV(req.file).then(data => res.status(200).send({csv: data}))
+      .catch(e => {
+        console.log(e)
+        res.status(404).send({ type: 'error', msg: e.message })
       })
     }
   })

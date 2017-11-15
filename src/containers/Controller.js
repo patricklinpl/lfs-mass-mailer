@@ -85,8 +85,8 @@ export default class Controller extends Component {
         if (xhr.readyState === 4) {
           const response = JSON.parse(xhr.response)
           if (xhr.status === 200 && response.csv) {
-              this.getHeaders(response.csv)
-              this.setState({ uploadCSV: true, data: response.csv, previewData: true, loading: false })
+            this.getHeaders(response.csv)
+            this.setState({ uploadCSV: true, data: response.csv, previewData: true, loading: false })
           } else if (xhr.status === 404) {
             if (typeof response.msg.code === 'undefined') {
               (typeof response.msg.storageErrors === 'undefined') ? this.setState({ open: true, errormsg: response.msg, loading: false }) : this.setState({ open: true, errormsg: 'Unsupported File Type!', loading: false })
@@ -207,7 +207,7 @@ export default class Controller extends Component {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
-        <br/><br/>
+        <br /><br />
         {this.state.uploadCSV === false ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
         {(Array.isArray(this.state.data) && this.state.previewData === true)
         ? <Preview

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Card, CardActions, CardHeader } from 'material-ui/Card'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -62,4 +63,8 @@ export default class Form extends Component {
       </div>
     )
   }
+}
+
+Form.propTypes = {
+  handleUpload: PropTypes.func.isRequired
 }
