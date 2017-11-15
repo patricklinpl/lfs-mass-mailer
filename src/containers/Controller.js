@@ -74,25 +74,21 @@ export default class Controller extends Component {
 
   handleUpload (state) {
     return event => {
+      this.setState({ loading: true })
       event.preventDefault()
       const xhr = new XMLHttpRequest()
       let FD = new FormData()
       for (let name in state) {
         FD.append(name, state[name])
       }
-      this.setState({ loading: true })
       xhr.onload = () => {
         if (xhr.readyState === 4) {
           const response = JSON.parse(xhr.response)
-          if (xhr.status === 200 && response.csv) {
+          if (xhr.status === 200 && typeof response.csv !== 'undefined') {
             this.getHeaders(response.csv)
             this.setState({ uploadCSV: true, data: response.csv, previewData: true, loading: false })
-          } else if (xhr.status === 404) {
-            if (typeof response.msg.code === 'undefined') {
-              (typeof response.msg.storageErrors === 'undefined') ? this.setState({ open: true, errormsg: response.msg, loading: false }) : this.setState({ open: true, errormsg: 'Unsupported File Type!', loading: false })
-            } else {
-              this.setState({ open: true, errormsg: 'File is too large!', loading: false })
-            }
+          } else if (xhr.status === 404 && typeof response.msg !== 'undefined') {
+            this.setState({ open: true, errormsg: response.msg, loading: false })
           }
         }
       }
@@ -217,7 +213,6 @@ export default class Controller extends Component {
           emailHeader={this.state.emailHeader}
           headers={this.state.headers}
           data={this.state.data}
-          previewData={this.state.previewData}
         /> : null}
         {this.state.uploadTemplate === true
           ? <Template

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import MenuBar from '../components/MenuBar'
 import { Table, Row, Cell } from 'react-responsive-table'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -10,31 +11,23 @@ import Paper from 'material-ui/Paper'
 export default class Preview extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      csv: props.data,
-      previewData: props.previewData
-    }
     this.tableBuilder = this.tableBuilder.bind(this)
     this.cellBuilder = this.cellBuilder.bind(this)
     this.dropDownBuilder = this.dropDownBuilder.bind(this)
   }
 
   dropDownBuilder () {
-    const options = []
     const headers = this.props.headers
-    for (let i = 0; i < headers.length; i++) {
-      options.push(<MenuItem value={headers[i]} primaryText={headers[i]} />)
-    }
-    return options
+    return headers.map(element => (
+      <MenuItem value={element} primaryText={element} />
+    ))
   }
 
   cellBuilder (data, type) {
-    const store = []
     const headers = this.props.headers
-    for (let i = 0; i < headers.length; i++) {
-      store.push(<Cell minWidthPx={100} key={`cell${i + 1}`}>{type === 'head' ? headers[i] : data[headers[i]]}</Cell>)
-    }
-    return store
+    return headers.map(element => (
+      <Cell minWidthPx={100}>{type === 'head' ? element : data[element]}</Cell>
+    ))
   }
 
   tableBuilder (data) {
@@ -43,7 +36,7 @@ export default class Preview extends Component {
       const headerRow = <Row header key='row1'>{this.cellBuilder(data, 'head')}</Row>
       tableArray.push(headerRow)
       for (let i = 0; i < (data.length > 10 ? 10 : data.length); i++) {
-        tableArray.push(<Row key={`row${i + 2}`}>{this.cellBuilder(data[i], 'row')}</Row>)
+        tableArray.push(<Row>{this.cellBuilder(data[i], 'row')}</Row>)
       }
     }
     return tableArray
@@ -58,7 +51,7 @@ export default class Preview extends Component {
           <br /> <br />
           <div className='md-table'>
             <Table material className='md-table'>
-              {this.tableBuilder(this.state.csv)}
+              {this.tableBuilder(this.props.data)}
             </Table>
           </div>
           <br /> <br />
@@ -79,4 +72,13 @@ export default class Preview extends Component {
       </div>
     )
   }
+}
+
+Preview.propTypes = {
+  writeTemplate: PropTypes.func.isRequired,
+  backToUpload: PropTypes.func.isRequired,
+  selectEmail: PropTypes.func.isRequired,
+  emailHeader: PropTypes.string,
+  headers: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
 }
