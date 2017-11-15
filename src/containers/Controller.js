@@ -1,12 +1,12 @@
 /* global XMLHttpRequest, FormData */
 import React, { Component } from 'react'
 import Form from '../components/Form'
-import PreviewContact from '../components/PreviewContact'
+import Preview from '../components/Preview'
 import Template from '../components/Template'
+import Success from '../components/Success'
 import Loading from '../components/Loading'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
-import Success from '../components/Success'
 import Paper from 'material-ui/Paper'
 
 export default class Controller extends Component {
@@ -84,21 +84,14 @@ export default class Controller extends Component {
       xhr.onload = () => {
         if (xhr.readyState === 4) {
           const response = JSON.parse(xhr.response)
-          if (xhr.status === 200) {
-            if (response.csv) {
+          if (xhr.status === 200 && response.csv) {
               this.getHeaders(response.csv)
               this.setState({ uploadCSV: true, data: response.csv, previewData: true, loading: false })
-            }
           } else if (xhr.status === 404) {
-            this.setState({ loading: false })
             if (typeof response.msg.code === 'undefined') {
-              if (typeof response.msg.storageErrors === 'undefined') {
-                this.setState({ open: true, errormsg: response.msg })
-              } else {
-                this.setState({ open: true, errormsg: 'Unsupported File Type!' })
-              }
+              (typeof response.msg.storageErrors === 'undefined') ? this.setState({ open: true, errormsg: response.msg, loading: false }) : this.setState({ open: true, errormsg: 'Unsupported File Type!', loading: false })
             } else {
-              this.setState({ open: true, errormsg: 'File is too large!' })
+              this.setState({ open: true, errormsg: 'File is too large!', loading: false })
             }
           }
         }
@@ -214,25 +207,10 @@ export default class Controller extends Component {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
-        <Dialog
-          title='Error'
-          actions={actions}
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}>
-          {this.state.errormsg}
-        </Dialog>
-        <Dialog
-          title='Confirmation'
-          actions={send}
-          modal={false}
-          open={this.state.confirm}
-          onRequestClose={this.cancelSend}>
-          Are you sure you want to send this email?
-          </Dialog>
+        <br/><br/>
         {this.state.uploadCSV === false ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
         {(Array.isArray(this.state.data) && this.state.previewData === true)
-        ? <PreviewContact
+        ? <Preview
           writeTemplate={this.writeTemplate.bind(this)}
           backToUpload={this.backToUpload.bind(this)}
           selectEmail={this.selectEmail.bind(this)}
@@ -257,6 +235,22 @@ export default class Controller extends Component {
             <a href='https://secure.landfood.ubc.ca/Shibboleth.sso/Logout?return=http://dietetics.landfood.ubc.ca' >CWL LOGOUT</a>
           </Paper>
         </div>
+        <Dialog
+          title='Error'
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}>
+          {this.state.errormsg}
+        </Dialog>
+        <Dialog
+          title='Confirmation'
+          actions={send}
+          modal={false}
+          open={this.state.confirm}
+          onRequestClose={this.cancelSend}>
+          Are you sure you want to send this email?
+          </Dialog>
       </div>
     )
   }

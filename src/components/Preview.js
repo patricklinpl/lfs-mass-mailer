@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
+import { Table, Row, Cell } from 'react-responsive-table'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import Paper from 'material-ui/Paper'
 
-export default class PreviewContact extends Component {
+export default class Preview extends Component {
   constructor (props) {
     super(props)
     this.state = {
