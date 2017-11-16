@@ -5,18 +5,15 @@ import Preview from '../components/Preview'
 import Template from '../components/Template'
 import Success from '../components/Success'
 import Loading from '../components/Loading'
+import Footer from '../components/Footer'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
-import Paper from 'material-ui/Paper'
 
 export default class Controller extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      uploadCSV: false,
-      previewData: false,
-      uploadTemplate: false,
-      previewTemplate: false,
+      view: 'upload',
       headers: null,
       emailHeader: null,
       tempHeaders: null,
@@ -28,8 +25,7 @@ export default class Controller extends Component {
       validateEmail: [],
       confirm: false,
       body: '',
-      subject: '',
-      success: false
+      subject: ''
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -37,14 +33,15 @@ export default class Controller extends Component {
     this.sendEmail = this.sendEmail.bind(this)
     this.closeAndSend = this.closeAndSend.bind(this)
     this.cancelSend = this.cancelSend.bind(this)
+    this.loadOn = this.loadOn.bind(this)
   }
 
   reset () {
-    this.setState({ body: '', data: null, emailHeader: null, headers: null, subject: '', success: false, uploadCSV: false, validateEmail: null })
+    this.setState({ view: 'upload', body: '', data: null, emailHeader: null, headers: null, subject: '', validateEmail: null })
   }
 
   sendEmail () {
-    this.setState({ uploadTemplate: false })
+    this.loadOn()
     const xhr = new XMLHttpRequest()
     xhr.open('POST', 'api/send-email', true)
     xhr.setRequestHeader('Content-type', 'application/json')
@@ -53,7 +50,7 @@ export default class Controller extends Component {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200) {
           console.log(response)
-          this.setState({ loading: false, success: true })
+          this.setState({ view: 'success', loading: false })
         } else if (xhr.status === 404) {
           console.log(response)
           this.setState({ loading: false })
@@ -72,10 +69,14 @@ export default class Controller extends Component {
     Array.isArray(data) && this.setState({ headers: Object.keys(data[0]) })
   }
 
+  loadOn () {
+    this.setState({ loading: true })
+  }
+
   handleUpload (state) {
     return event => {
-      this.setState({ loading: true })
       event.preventDefault()
+      this.loadOn()
       const xhr = new XMLHttpRequest()
       let FD = new FormData()
       for (let name in state) {
@@ -84,10 +85,10 @@ export default class Controller extends Component {
       xhr.onload = () => {
         if (xhr.readyState === 4) {
           const response = JSON.parse(xhr.response)
-          if (xhr.status === 200 && typeof response.csv !== 'undefined') {
+          if (xhr.status === 200) {
             this.getHeaders(response.csv)
-            this.setState({ uploadCSV: true, data: response.csv, previewData: true, loading: false })
-          } else if (xhr.status === 404 && typeof response.msg !== 'undefined') {
+            this.setState({ view: 'preview', data: response.csv, loading: false })
+          } else if (xhr.status === 404) {
             this.setState({ open: true, errormsg: response.msg, loading: false })
           }
         }
@@ -100,7 +101,7 @@ export default class Controller extends Component {
   /** ============ */
 
   /**
-   * PreviewContact.js Functions
+   * Preview.js Functions
    * ============
   */
 
@@ -121,13 +122,13 @@ export default class Controller extends Component {
       if (emails.length !== this.state.data.length) {
         invalidEmails.length === this.state.data.length ? this.setState({ open: true, errormsg: `Invalid Email Identifier: All rows are invalid` }) : this.setState({ open: true, errormsg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
       } else {
-        this.setState({ uploadCSV: true, previewData: false, uploadTemplate: true, validateEmail: emails })
+        this.setState({ view: 'write', validateEmail: emails })
       }
     }
   }
 
   backToUpload () {
-    this.setState({ uploadCSV: false, previewData: false, data: null, headers: null, emailHeader: null })
+    this.setState({ view: 'upload', data: null, headers: null, emailHeader: null })
   }
 
   selectEmail (event, index, value) {
@@ -142,11 +143,11 @@ export default class Controller extends Component {
   */
 
   backToContactPrev () {
-    this.setState({ uploadCSV: true, previewData: true, uploadTemplate: false, emailHeader: null, validateEmail: null })
+    this.setState({ view: 'preview', emailHeader: null, validateEmail: null })
   }
 
   handleTemplate (text, headers) {
-    this.setState({ uploadCSV: true, previewData: false, uploadTemplate: false, previewTemplate: true, template: text, tempHeaders: headers })
+    this.setState({ view: 'write', template: text, tempHeaders: headers })
   }
 
   /** ============ */
@@ -204,8 +205,8 @@ export default class Controller extends Component {
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
         <br /><br />
-        {this.state.uploadCSV === false ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
-        {(Array.isArray(this.state.data) && this.state.previewData === true)
+        {this.state.view === 'upload' ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
+        {(Array.isArray(this.state.data) && this.state.view === 'preview')
         ? <Preview
           writeTemplate={this.writeTemplate.bind(this)}
           backToUpload={this.backToUpload.bind(this)}
@@ -214,7 +215,7 @@ export default class Controller extends Component {
           headers={this.state.headers}
           data={this.state.data}
         /> : null}
-        {this.state.uploadTemplate === true
+        {this.state.view === 'write'
           ? <Template
             data={this.state.data}
             handleTemplate={this.handleTemplate.bind(this)}
@@ -223,13 +224,8 @@ export default class Controller extends Component {
             headers={this.state.headers}
           /> : null}
         {this.state.loading === true ? <Loading /> : null}
-        {this.state.success === true ? <Success reset={this.reset.bind(this)} /> : null}
-        <div className='footer'>
-          <Paper style={{margin: 20, padding: 20}} >
-            <p>For assistance contact <a href='mailto:it@landfood.ubc.ca' target='_top'>it@landfood.ubc.ca</a></p>
-            <a href='https://secure.landfood.ubc.ca/Shibboleth.sso/Logout?return=http://dietetics.landfood.ubc.ca' >CWL LOGOUT</a>
-          </Paper>
-        </div>
+        {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} /> : null}
+        <Footer />
         <Dialog
           title='Error'
           actions={actions}

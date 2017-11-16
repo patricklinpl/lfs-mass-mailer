@@ -80,5 +80,5 @@ Preview.propTypes = {
   selectEmail: PropTypes.func.isRequired,
   emailHeader: PropTypes.string,
   headers: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired
 }
