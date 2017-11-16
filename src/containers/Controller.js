@@ -6,22 +6,24 @@ import Template from '../components/Template'
 import Success from '../components/Success'
 import Loading from '../components/Loading'
 import Footer from '../components/Footer'
-import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
+import Alert from '../components/Alert'
 
 export default class Controller extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      view: 'upload',
-      headers: null,
+      view: 'upload', // upload, preview, write, success
+      headers: null, // headers
+      data: null,    // csv data
+
+      title: '',
+      msg: '',
+      open: false,
+
       emailHeader: null,
       tempHeaders: null,
-      data: null,
       template: null,
       loading: false,
-      open: false,
-      errormsg: '',
       validateEmail: [],
       confirm: false,
       body: '',
@@ -32,7 +34,6 @@ export default class Controller extends Component {
     this.validateEmail = this.validateEmail.bind(this)
     this.sendEmail = this.sendEmail.bind(this)
     this.closeAndSend = this.closeAndSend.bind(this)
-    this.cancelSend = this.cancelSend.bind(this)
     this.loadOn = this.loadOn.bind(this)
   }
 
@@ -64,7 +65,6 @@ export default class Controller extends Component {
    * Form.js Functions
    * ============
   */
-
   getHeaders (data) {
     Array.isArray(data) && this.setState({ headers: Object.keys(data[0]) })
   }
@@ -89,7 +89,7 @@ export default class Controller extends Component {
             this.getHeaders(response.csv)
             this.setState({ view: 'preview', data: response.csv, loading: false })
           } else if (xhr.status === 404) {
-            this.setState({ open: true, errormsg: response.msg, loading: false })
+            this.setState({ title: 'Error', msg: response.msg, open: true, loading: false })
           }
         }
       }
@@ -97,7 +97,6 @@ export default class Controller extends Component {
       xhr.send(FD)
     }
   }
-
   /** ============ */
 
   /**
@@ -112,7 +111,7 @@ export default class Controller extends Component {
 
   writeTemplate () {
     if (!this.state.emailHeader) {
-      this.setState({ open: true, errormsg: 'Please Select an Identifier' })
+      this.setState({ title: 'Error', open: true, msg: 'Please Select an Identifier' })
     } else {
       const emails = []
       const invalidEmails = []
@@ -120,7 +119,7 @@ export default class Controller extends Component {
         this.validateEmail(row[this.state.emailHeader]) ? emails.push(row[this.state.emailHeader]) : invalidEmails.push(row[this.state.emailHeader])
       })
       if (emails.length !== this.state.data.length) {
-        invalidEmails.length === this.state.data.length ? this.setState({ open: true, errormsg: `Invalid Email Identifier: All rows are invalid` }) : this.setState({ open: true, errormsg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
+        invalidEmails.length === this.state.data.length ? this.setState({ title: 'Error', open: true, msg: `Invalid Email Identifier: All rows are invalid` }) : this.setState({ title: 'Error', open: true, msg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
       } else {
         this.setState({ view: 'write', validateEmail: emails })
       }
@@ -153,54 +152,25 @@ export default class Controller extends Component {
   /** ============ */
 
   /**
-   * Error Dialog
+   * Dialog
    * ============
   */
 
   handleClose () {
-    this.setState({open: false})
+    this.setState({open: false, msg: '', title: ''})
   }
 
-  /** ============ */
-
-  /**
-   * Send Dialog
-   * ============
-  */
-
   closeAndSend () {
-    this.setState({ loading: true, confirm: false }, this.sendEmail())
+    this.setState({ loading: true, open: false, msg: '', title: '' }, this.sendEmail())
   }
 
   confirmSend (text, subject) {
-    subject === '' ? this.setState({ open: true, errormsg: 'Subject is required!' }) : this.setState({ confirm: true, body: text, subject: subject })
-  }
-
-  cancelSend () {
-    this.setState({ confirm: false })
+    subject === '' ? this.setState({ title: 'Error', open: true, msg: 'Subject is required!' }) : this.setState({ title: 'Confirmation', msg: 'Are you sure you want to send this email?', open: true, body: text, subject: subject })
   }
 
   /** ============ */
 
   render () {
-    const actions = [
-      <FlatButton
-        label='Dismiss'
-        primary
-        onClick={this.handleClose}
-      />
-    ]
-    const send = [
-      <FlatButton
-        label='Cancel'
-        primary
-        onClick={this.cancelSend}
-        />,
-      <FlatButton
-        label='Send'
-        primary
-        onClick={this.closeAndSend}
-        />]
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
@@ -226,22 +196,13 @@ export default class Controller extends Component {
         {this.state.loading === true ? <Loading /> : null}
         {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} /> : null}
         <Footer />
-        <Dialog
-          title='Error'
-          actions={actions}
-          modal={false}
+        <Alert
+          title={this.state.title}
+          msg={this.state.msg}
           open={this.state.open}
-          onRequestClose={this.handleClose}>
-          {this.state.errormsg}
-        </Dialog>
-        <Dialog
-          title='Confirmation'
-          actions={send}
-          modal={false}
-          open={this.state.confirm}
-          onRequestClose={this.cancelSend}>
-          Are you sure you want to send this email?
-          </Dialog>
+          handleClose={this.handleClose}
+          closeAndSend={this.closeAndSend}
+        />
       </div>
     )
   }
