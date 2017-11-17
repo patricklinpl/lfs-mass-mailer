@@ -145,7 +145,7 @@ export default class Template extends Component {
         <br /> <br />
         <div className='control-buttons'>
           <FlatButton label='Back' onClick={this.props.backToContactPrev} />
-          <RaisedButton label='Send' primary onClick={() => this.props.confirmSend(this.state.text, this.state.subject)} />
+          <RaisedButton label='Send' primary onClick={() => this.props.confirmSend({ subject: this.state.subject, body: this.state.text })} />
         </div>
         <br /> <br />
       </div>

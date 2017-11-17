@@ -157,15 +157,15 @@ export default class Controller extends Component {
   */
 
   handleClose () {
-    this.setState({open: false, msg: '', title: ''})
+    this.setState({ title: '', msg: '', open: false })
   }
 
   closeAndSend () {
-    this.setState({ loading: true, open: false, msg: '', title: '' }, this.sendEmail())
+    this.setState({ loading: true, title: '', msg: '', open: false }, this.sendEmail())
   }
 
-  confirmSend (text, subject) {
-    subject === '' ? this.setState({ title: 'Error', open: true, msg: 'Subject is required!' }) : this.setState({ title: 'Confirmation', msg: 'Are you sure you want to send this email?', open: true, body: text, subject: subject })
+  confirmSend ({subject, body}) {
+    subject === '' ? this.setState({ title: 'Error', msg: 'Subject is required!', open: true }) : this.setState({ title: 'Confirmation', msg: 'Are you sure you want to send this email?', open: true, body: body, subject: subject })
   }
 
   /** ============ */
@@ -174,7 +174,7 @@ export default class Controller extends Component {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
-        <br /><br />
+        <br />
         {this.state.view === 'upload' ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
         {(Array.isArray(this.state.data) && this.state.view === 'preview')
         ? <Preview
