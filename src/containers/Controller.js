@@ -1,5 +1,6 @@
 /* global XMLHttpRequest, FormData */
 import React, { Component } from 'react'
+import { findEmails, validateEmail } from '../scripts/util'
 import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
@@ -25,23 +26,21 @@ export default class Controller extends Component {
       emailHeader: null,
       tempHeaders: null,
       template: null,
-      validateEmail: [],
+      validEmail: [],
 
       subject: '',
       body: ''
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
-    this.validateEmail = this.validateEmail.bind(this)
     this.sendEmail = this.sendEmail.bind(this)
     this.closeAndSend = this.closeAndSend.bind(this)
     this.loadOn = this.loadOn.bind(this)
     this.shouldShowPreview = this.shouldShowPreview.bind(this)
-    this.findEmails = this.findEmails.bind(this)
   }
 
   reset () {
-    this.setState({ view: 'upload', body: '', data: null, emailHeader: null, headers: null, subject: '', validateEmail: null })
+    this.setState({ view: 'upload', body: '', data: null, emailHeader: null, headers: null, subject: '', validEmail: null })
   }
 
   sendEmail () {
@@ -90,7 +89,7 @@ export default class Controller extends Component {
           const response = JSON.parse(xhr.response)
           if (xhr.status === 200) {
             this.getHeaders(response.csv)
-            this.setState({ view: 'preview', data: response.csv, emailHeader: this.findEmails(response.csv), loading: false })
+            this.setState({ view: 'preview', data: response.csv, emailHeader: findEmails({ headers: this.state.headers, data: response.csv }), loading: false })
           } else if (xhr.status === 404) {
             this.setState({ title: 'Error', msg: response.msg, open: true, loading: false })
           }
@@ -107,15 +106,6 @@ export default class Controller extends Component {
    * ============
   */
 
-  validateEmail (email) {
-    const verify = /\S+@\S+\.\S+/
-    return verify.test(email)
-  }
-
-  findEmails (data) {
-    return [...this.state.headers].filter(header => (this.validateEmail([...data][0][header]))).pop()
-  }
-
   selectEmail (event, index, value) {
     this.setState({ emailHeader: value })
   }
@@ -127,12 +117,12 @@ export default class Controller extends Component {
       const emails = []
       const invalidEmails = []
       this.state.data.forEach(row => {
-        this.validateEmail(row[this.state.emailHeader]) ? emails.push(row[this.state.emailHeader]) : invalidEmails.push(row[this.state.emailHeader])
+        validateEmail(row[this.state.emailHeader]) ? emails.push(row[this.state.emailHeader]) : invalidEmails.push(row[this.state.emailHeader])
       })
       if (emails.length !== this.state.data.length) {
         invalidEmails.length === this.state.data.length ? this.setState({ title: 'Error', open: true, msg: `Invalid Email Identifier: All rows are invalid` }) : this.setState({ title: 'Error', open: true, msg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
       } else {
-        this.setState({ view: 'write', validateEmail: emails })
+        this.setState({ view: 'write', validEmail: emails })
       }
     }
   }
@@ -140,7 +130,7 @@ export default class Controller extends Component {
   backToUpload () {
     this.setState({ view: 'upload', data: null, headers: null, emailHeader: null })
   }
-  
+
   /** ============ */
 
   /**
@@ -149,7 +139,7 @@ export default class Controller extends Component {
   */
 
   backToContactPrev () {
-    this.setState({ view: 'preview', emailHeader: null, validateEmail: null })
+    this.setState({ view: 'preview', emailHeader: null, validEmail: null })
   }
 
   handleTemplate (text, headers) {

@@ -9,22 +9,16 @@ import MenuItem from 'material-ui/MenuItem'
 import Paper from 'material-ui/Paper'
 
 const Preview = (props) => {
-  const head = () => {
-    return [...props.headers].map(row => (<Cell minWidthPx={100}>{row}</Cell>))
-  }
+  const head = () => ([...props.headers].map(row => (<Cell minWidthPx={100}>{row}</Cell>)))
 
-  const row = (data) => {
-    return [...props.headers].map(row => (<Cell minWidthPx={100}>{data[row]}</Cell>))
-  }
-
-  const dropDown = () => {
-    return [...props.headers].map(row => (<MenuItem value={row} primaryText={row} />))
-  }
+  const row = (data) => ([...props.headers].map(row => (<Cell minWidthPx={100}>{data[row]}</Cell>)))
 
   const table = (data) => {
     const table = [<Row header >{head()}</Row>]
     return [...table, data.slice(0, 10).map(contact => (<Row>{row(contact)}</Row>))]
   }
+
+  const dropDown = () => ([...props.headers].map(row => (<MenuItem value={row} primaryText={row} />)))
 
   return (
     <div>
