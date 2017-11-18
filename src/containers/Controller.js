@@ -37,7 +37,6 @@ export default class Controller extends Component {
     this.closeAndSend = this.closeAndSend.bind(this)
     this.loadOn = this.loadOn.bind(this)
     this.shouldShowPreview = this.shouldShowPreview.bind(this)
-    this.findEmails = this.findEmails.bind(this)
   }
 
   reset () {
@@ -90,7 +89,7 @@ export default class Controller extends Component {
           const response = JSON.parse(xhr.response)
           if (xhr.status === 200) {
             this.getHeaders(response.csv)
-            this.setState({ view: 'preview', data: response.csv, emailHeader: this.findEmails(response.csv), loading: false })
+            this.setState({ view: 'preview', data: response.csv, loading: false })
           } else if (xhr.status === 404) {
             this.setState({ title: 'Error', msg: response.msg, open: true, loading: false })
           }
@@ -112,14 +111,6 @@ export default class Controller extends Component {
     return verify.test(email)
   }
 
-  findEmails (data) {
-    return [...this.state.headers].filter(header => (this.validateEmail([...data][0][header]))).pop()
-  }
-
-  selectEmail (event, index, value) {
-    this.setState({ emailHeader: value })
-  }
-
   writeTemplate () {
     if (!this.state.emailHeader) {
       this.setState({ title: 'Error', open: true, msg: 'Please Select an Identifier' })
@@ -139,6 +130,10 @@ export default class Controller extends Component {
 
   backToUpload () {
     this.setState({ view: 'upload', data: null, headers: null, emailHeader: null })
+  }
+
+  selectEmail (event, index, value) {
+    this.setState({emailHeader: value})
   }
 
   /** ============ */

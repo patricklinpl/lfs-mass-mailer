@@ -42,10 +42,11 @@ const Preview = (props) => {
       <br />
       <div className='control-buttons' >
         <SelectField floatingLabelText='Select Email Identifier' value={props.emailHeader} onChange={props.selectEmail}>
+          <MenuItem value={null} primaryText='' />
           {dropDown()}
         </SelectField>
       </div>
-      <br />
+      <br /> <br />
       <div className='control-buttons'>
         <FlatButton label='Back' onClick={props.backToUpload} />
         <RaisedButton label='Next' primary onClick={props.writeTemplate} />
