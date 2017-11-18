@@ -9,49 +9,41 @@ import MenuItem from 'material-ui/MenuItem'
 import Paper from 'material-ui/Paper'
 
 const Preview = (props) => {
-  const dropDownBuilder = () => {
-    const headers = props.headers
-    return headers.map(element => (
-      <MenuItem value={element} primaryText={element} />
-    ))
+  const head = () => {
+    return [...props.headers].map(row => (<Cell minWidthPx={100}>{row}</Cell>))
   }
 
-  const cellBuilder = (data, type) => {
-    const headers = props.headers
-    return headers.map(element => (
-      <Cell minWidthPx={100}>{type === 'head' ? element : data[element]}</Cell>
-    ))
+  const row = (data) => {
+    return [...props.headers].map(row => (<Cell minWidthPx={100}>{data[row]}</Cell>))
   }
 
-  const tableBuilder = (data) => {
-    const tableArray = []
-    if (data.length > 0) {
-      const headerRow = <Row header key='row1'>{cellBuilder(data, 'head')}</Row>
-      tableArray.push(headerRow)
-      for (let i = 0; i < (data.length > 10 ? 10 : data.length); i++) {
-        tableArray.push(<Row>{cellBuilder(data[i], 'row')}</Row>)
-      }
-    }
-    return tableArray
+  const dropDown = () => {
+    return [...props.headers].map(row => (<MenuItem value={row} primaryText={row} />))
   }
+
+  const table = (data) => {
+    const table = [<Row header >{head()}</Row>]
+    return [...table, data.slice(0, 10).map(contact => (<Row>{row(contact)}</Row>))]
+  }
+
   return (
     <div>
       <MenuBar title='Preview of the First Ten Rows' />
       <br />
       <Paper zDepth={2}>
-        <br /> <br />
+        <br />
         <div className='md-table'>
           <Table material className='md-table'>
-            {tableBuilder(props.data)}
+            {table(props.data)}
           </Table>
         </div>
-        <br /> <br />
+        <br />
       </Paper>
-      <br /> <br />
+      <br />
       <div className='control-buttons' >
         <SelectField floatingLabelText='Select Email Identifier' value={props.emailHeader} onChange={props.selectEmail}>
           <MenuItem value={null} primaryText='' />
-          {dropDownBuilder()}
+          {dropDown()}
         </SelectField>
       </div>
       <br /> <br />
@@ -59,18 +51,17 @@ const Preview = (props) => {
         <FlatButton label='Back' onClick={props.backToUpload} />
         <RaisedButton label='Next' primary onClick={props.writeTemplate} />
       </div>
-      <br /> <br />
     </div>
   )
 }
 
 Preview.propTypes = {
+  headers: PropTypes.array.isRequired,
+  data: PropTypes.array.isRequired,
+  emailHeader: PropTypes.string,
   writeTemplate: PropTypes.func.isRequired,
   backToUpload: PropTypes.func.isRequired,
-  selectEmail: PropTypes.func.isRequired,
-  emailHeader: PropTypes.string,
-  headers: PropTypes.array.isRequired,
-  data: PropTypes.array.isRequired
+  selectEmail: PropTypes.func.isRequired
 }
 
 export default Preview
