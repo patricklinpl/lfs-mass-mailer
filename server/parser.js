@@ -12,6 +12,8 @@ const readCSV = (file) => {
       const parser = parse({delimiter: ',', columns: true, relax: true, auto_parse: true}, (err, data) => {
         if (err) {
           reject(new Error(err))
+        } if (data.length === 0) {
+          reject(new Error('Empty CSV!'))
         } else {
           resolve(data)
         }

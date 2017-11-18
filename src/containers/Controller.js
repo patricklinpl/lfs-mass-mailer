@@ -16,18 +16,19 @@ export default class Controller extends Component {
       headers: null, // headers
       data: null,    // csv data
 
-      title: '',
-      msg: '',
-      open: false,
+      title: '', // dialog Error, Confirmation
+      msg: '',   // dialog msg
+      open: false, // dialog open
+
+      loading: false, // loading bar
 
       emailHeader: null,
       tempHeaders: null,
       template: null,
-      loading: false,
       validateEmail: [],
-      confirm: false,
-      body: '',
-      subject: ''
+
+      subject: '',
+      body: ''
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -35,6 +36,7 @@ export default class Controller extends Component {
     this.sendEmail = this.sendEmail.bind(this)
     this.closeAndSend = this.closeAndSend.bind(this)
     this.loadOn = this.loadOn.bind(this)
+    this.shouldShowPreview = this.shouldShowPreview.bind(this)
   }
 
   reset () {
@@ -170,20 +172,24 @@ export default class Controller extends Component {
 
   /** ============ */
 
+  shouldShowPreview ({ data, view, headers }) {
+    return Array.isArray(data) && Array.isArray(headers) && headers.length >= 1 && data.length >= 1 && view === 'preview'
+  }
+
   render () {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
         <br />
         {this.state.view === 'upload' ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
-        {(Array.isArray(this.state.data) && this.state.view === 'preview')
+        {this.shouldShowPreview({ data: this.state.data, view: this.state.view, headers: this.state.headers })
         ? <Preview
+          headers={this.state.headers}
+          data={this.state.data}
+          emailHeader={this.state.emailHeader}
           writeTemplate={this.writeTemplate.bind(this)}
           backToUpload={this.backToUpload.bind(this)}
           selectEmail={this.selectEmail.bind(this)}
-          emailHeader={this.state.emailHeader}
-          headers={this.state.headers}
-          data={this.state.data}
         /> : null}
         {this.state.view === 'write'
           ? <Template
