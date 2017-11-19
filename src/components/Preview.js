@@ -18,7 +18,7 @@ const Preview = (props) => {
     return [...table, data.slice(0, 10).map(contact => (<Row>{row(contact)}</Row>))]
   }
 
-  const dropDown = () => ([...props.headers].map(row => (<MenuItem value={row} primaryText={row} />)))
+  const dropdown = () => ([...props.headers].map(row => (<MenuItem value={row} primaryText={row} />)))
 
   return (
     <div>
@@ -36,7 +36,7 @@ const Preview = (props) => {
       <br />
       <div className='control-buttons' >
         <SelectField floatingLabelText='Select Email Identifier' value={props.emailHeader} onChange={props.selectEmail}>
-          {dropDown()}
+          {dropdown()}
         </SelectField>
       </div>
       <br />

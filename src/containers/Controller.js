@@ -1,6 +1,6 @@
 /* global XMLHttpRequest, FormData */
 import React, { Component } from 'react'
-import { findEmails, validateEmail } from '../scripts/util'
+import { findEmails, validateEmail, shouldShowPreview, getValidEmails } from '../scripts/util'
 import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
@@ -36,7 +36,6 @@ export default class Controller extends Component {
     this.sendEmail = this.sendEmail.bind(this)
     this.closeAndSend = this.closeAndSend.bind(this)
     this.loadOn = this.loadOn.bind(this)
-    this.shouldShowPreview = this.shouldShowPreview.bind(this)
   }
 
   reset () {
@@ -111,19 +110,11 @@ export default class Controller extends Component {
   }
 
   writeTemplate () {
-    if (!this.state.emailHeader) {
-      this.setState({ title: 'Error', open: true, msg: 'Please Select an Identifier' })
+    if (this.state.emailHeader) {
+      const emails = getValidEmails({ data: this.state.data, emailHeader: this.state.emailHeader })
+      emails.length === this.state.data.length ? this.setState({ view: 'write', validEmail: emails }) : this.setState({ title: 'Error', open: true, msg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
     } else {
-      const emails = []
-      const invalidEmails = []
-      this.state.data.forEach(row => {
-        validateEmail(row[this.state.emailHeader]) ? emails.push(row[this.state.emailHeader]) : invalidEmails.push(row[this.state.emailHeader])
-      })
-      if (emails.length !== this.state.data.length) {
-        invalidEmails.length === this.state.data.length ? this.setState({ title: 'Error', open: true, msg: `Invalid Email Identifier: All rows are invalid` }) : this.setState({ title: 'Error', open: true, msg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
-      } else {
-        this.setState({ view: 'write', validEmail: emails })
-      }
+      this.setState({ title: 'Error', open: true, msg: 'Please Select an Identifier' })
     }
   }
 
@@ -139,7 +130,7 @@ export default class Controller extends Component {
   */
 
   backToContactPrev () {
-    this.setState({ view: 'preview', emailHeader: null, validEmail: null })
+    this.setState({ view: 'preview', validEmail: null })
   }
 
   handleTemplate (text, headers) {
@@ -167,17 +158,13 @@ export default class Controller extends Component {
 
   /** ============ */
 
-  shouldShowPreview ({ data, view, headers }) {
-    return Array.isArray(data) && Array.isArray(headers) && headers.length >= 1 && data.length >= 1 && view === 'preview'
-  }
-
   render () {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
         <br />
         {this.state.view === 'upload' ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
-        {this.shouldShowPreview({ data: this.state.data, view: this.state.view, headers: this.state.headers })
+        {shouldShowPreview({ data: this.state.data, view: this.state.view, headers: this.state.headers })
         ? <Preview
           headers={this.state.headers}
           data={this.state.data}
