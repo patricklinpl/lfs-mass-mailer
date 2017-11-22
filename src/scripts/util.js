@@ -1,4 +1,6 @@
-const shouldShowPreview = ({ data, view, headers }) => (Array.isArray(data) && Array.isArray(headers) && headers.length >= 1 && data.length >= 1 && view === 'preview')
+const showPreview = ({ data, view, headers }) => (Array.isArray(data) && Array.isArray(headers) && headers.length >= 1 && data.length >= 1 && view === 'preview')
+
+const showTemplate = ({ data, view, headers, emailHeader }) => (Array.isArray(data) && Array.isArray(headers) && headers.length >= 1 && data.length >= 1 && view === 'write' && emailHeader.length >= 1)
 
 const getValidEmails = ({data, emailHeader}) => ([...data].filter(row => (validateEmail(row[emailHeader]))).map(row => (row[emailHeader])))
 
@@ -10,8 +12,8 @@ const validateEmail = (email) => {
 }
 
 export {
-      findEmails,
-      validateEmail,
-      shouldShowPreview,
-      getValidEmails
-  }
+  showPreview,
+  showTemplate,
+  getValidEmails,
+  findEmails
+}

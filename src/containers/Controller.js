@@ -1,6 +1,6 @@
 /* global XMLHttpRequest, FormData */
 import React, { Component } from 'react'
-import { findEmails, shouldShowPreview, getValidEmails } from '../scripts/util'
+import { showPreview, showTemplate, findEmails, getValidEmails } from '../scripts/util'
 import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
@@ -13,23 +13,17 @@ export default class Controller extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      view: 'upload', // upload, preview, write, success
-      headers: null,
+      view: 'upload',
       data: null,
-
+      headers: null,
       emailHeader: null,
-      tempHeaders: null,
-      template: null,
       validEmail: [],
-
       subject: '',
       body: '',
-
-      loading: false, // loading bar
-
-      title: '', // dialog Error, Confirmation
-      msg: '',   // dialog msg
-      open: false // dialog open
+      loading: false,
+      title: '',
+      msg: '',
+      open: false
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -144,7 +138,7 @@ export default class Controller extends Component {
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
         <br />
         {this.state.view === 'upload' ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
-        {shouldShowPreview({ data: this.state.data, view: this.state.view, headers: this.state.headers })
+        {showPreview({ data: this.state.data, view: this.state.view, headers: this.state.headers })
         ? <Preview
           headers={this.state.headers}
           data={this.state.data}
@@ -153,7 +147,7 @@ export default class Controller extends Component {
           backToUpload={this.backToUpload.bind(this)}
           selectEmail={this.selectEmail.bind(this)}
         /> : null}
-        {this.state.view === 'write'
+        {showTemplate({ data: this.state.data, view: this.state.view, headers: this.state.headers, emailHeader: this.state.emailHeader })
           ? <Template
             data={this.state.data}
             headers={this.state.headers}
