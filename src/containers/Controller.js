@@ -14,14 +14,8 @@ export default class Controller extends Component {
     super(props)
     this.state = {
       view: 'upload', // upload, preview, write, success
-      headers: null, // headers
-      data: null,    // csv data
-
-      title: '', // dialog Error, Confirmation
-      msg: '',   // dialog msg
-      open: false, // dialog open
-
-      loading: false, // loading bar
+      headers: null,
+      data: null,
 
       emailHeader: null,
       tempHeaders: null,
@@ -29,7 +23,13 @@ export default class Controller extends Component {
       validEmail: [],
 
       subject: '',
-      body: ''
+      body: '',
+
+      loading: false, // loading bar
+
+      title: '', // dialog Error, Confirmation
+      msg: '',   // dialog msg
+      open: false // dialog open
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -38,34 +38,8 @@ export default class Controller extends Component {
     this.loadOn = this.loadOn.bind(this)
   }
 
-  reset () {
-    this.setState({ view: 'upload', body: '', data: null, emailHeader: null, headers: null, subject: '', validEmail: null })
-  }
+  /** ===== Form.js Functions ===== */
 
-  sendEmail () {
-    this.loadOn()
-    const xhr = new XMLHttpRequest()
-    xhr.open('POST', 'api/send-email', true)
-    xhr.setRequestHeader('Content-type', 'application/json')
-    xhr.onload = () => {
-      if (xhr.readyState === 4) {
-        const response = JSON.parse(xhr.response)
-        if (xhr.status === 200) {
-          console.log(response)
-          this.setState({ view: 'success', loading: false })
-        } else if (xhr.status === 404) {
-          console.log(response)
-          this.setState({ loading: false })
-        }
-      }
-    }
-    xhr.send(JSON.stringify({ data: this.state.data, emailID: this.state.emailHeader, headers: this.state.headers, subject: this.state.subject, html: this.state.body }))
-  }
-
-  /**
-   * Form.js Functions
-   * ============
-  */
   getHeaders (data) {
     Array.isArray(data) && this.setState({ headers: Object.keys(data[0]) })
   }
@@ -98,12 +72,8 @@ export default class Controller extends Component {
       xhr.send(FD)
     }
   }
-  /** ============ */
 
-  /**
-   * Preview.js Functions
-   * ============
-  */
+  /** ===== Preview.js Functions ===== */
 
   selectEmail (event, index, value) {
     this.setState({ emailHeader: value })
@@ -122,27 +92,37 @@ export default class Controller extends Component {
     this.setState({ view: 'upload', data: null, headers: null, emailHeader: null })
   }
 
-  /** ============ */
-
-  /**
-   * Template.js Functions
-   * ============
-  */
+  /** ===== Template.js Functions ===== */
 
   backToContactPrev () {
     this.setState({ view: 'preview', validEmail: null })
   }
 
-  handleTemplate (text, headers) {
-    this.setState({ view: 'write', template: text, tempHeaders: headers })
+  confirmSend ({subject, body}) {
+    subject === '' ? this.setState({ title: 'Error', msg: 'Subject is required!', open: true }) : this.setState({ title: 'Confirmation', msg: 'Are you sure you want to send this email?', open: true, body: body, subject: subject })
   }
 
-  /** ============ */
+  sendEmail () {
+    this.loadOn()
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'api/send-email', true)
+    xhr.setRequestHeader('Content-type', 'application/json')
+    xhr.onload = () => {
+      if (xhr.readyState === 4) {
+        const response = JSON.parse(xhr.response)
+        if (xhr.status === 200) {
+          console.log(response)
+          this.setState({ view: 'success', loading: false })
+        } else if (xhr.status === 404) {
+          console.log(response)
+          this.setState({ loading: false })
+        }
+      }
+    }
+    xhr.send(JSON.stringify({ data: this.state.data, emailID: this.state.emailHeader, headers: this.state.headers, subject: this.state.subject, html: this.state.body }))
+  }
 
-  /**
-   * Dialog
-   * ============
-  */
+  /** ===== Dialog.js Functions ===== */
 
   handleClose () {
     this.setState({ title: '', msg: '', open: false })
@@ -152,11 +132,11 @@ export default class Controller extends Component {
     this.setState({ loading: true, title: '', msg: '', open: false }, this.sendEmail())
   }
 
-  confirmSend ({subject, body}) {
-    subject === '' ? this.setState({ title: 'Error', msg: 'Subject is required!', open: true }) : this.setState({ title: 'Confirmation', msg: 'Are you sure you want to send this email?', open: true, body: body, subject: subject })
-  }
+  /** ===== Success.js Functions ===== */
 
-  /** ============ */
+  reset () {
+    this.setState({ view: 'upload', body: '', data: null, emailHeader: null, headers: null, subject: '', validEmail: null })
+  }
 
   render () {
     return (
@@ -177,7 +157,6 @@ export default class Controller extends Component {
           ? <Template
             data={this.state.data}
             headers={this.state.headers}
-            handleTemplate={this.handleTemplate.bind(this)}
             backToContactPrev={this.backToContactPrev.bind(this)}
             confirmSend={this.confirmSend.bind(this)}
           /> : null}

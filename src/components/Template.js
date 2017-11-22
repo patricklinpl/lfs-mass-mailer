@@ -115,7 +115,6 @@ export default class Template extends Component {
 Template.propTypes = {
   data: PropTypes.array.isRequired,
   headers: PropTypes.array.isRequired,
-  handleTemplate: PropTypes.func.isRequired,
   backToContactPrev: PropTypes.func.isRequired,
   confirmSend: PropTypes.func.isRequired
 }
