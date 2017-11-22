@@ -12,6 +12,6 @@ const validateEmail = (email) => {
 export {
       findEmails,
       validateEmail,
-      shouldShowPreview, 
+      shouldShowPreview,
       getValidEmails
   }

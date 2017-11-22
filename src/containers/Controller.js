@@ -1,6 +1,6 @@
 /* global XMLHttpRequest, FormData */
 import React, { Component } from 'react'
-import { findEmails, validateEmail, shouldShowPreview, getValidEmails } from '../scripts/util'
+import { findEmails, shouldShowPreview, getValidEmails } from '../scripts/util'
 import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
@@ -176,10 +176,10 @@ export default class Controller extends Component {
         {this.state.view === 'write'
           ? <Template
             data={this.state.data}
+            headers={this.state.headers}
             handleTemplate={this.handleTemplate.bind(this)}
             backToContactPrev={this.backToContactPrev.bind(this)}
             confirmSend={this.confirmSend.bind(this)}
-            headers={this.state.headers}
           /> : null}
         {this.state.loading === true ? <Loading /> : null}
         {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} /> : null}

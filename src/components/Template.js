@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import ReactQuill from 'react-quill'
-import { Table, Row, Cell } from 'react-responsive-table'
 import MenuBar from '../components/MenuBar'
 import Paper from 'material-ui/Paper'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -10,130 +10,89 @@ import TextField from 'material-ui/TextField'
 const modules = {
   toolbar: [
     [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }], [{ size: [] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' },
-    { 'indent': '-1' }, { 'indent': '+1' }],
-    ['link', 'image', 'video'],
-    ['clean']],
+    ['bold', 'italic', 'underline', 'strike'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+    ['link'], ['clean']],
   clipboard: {
     matchVisual: false
   }
 }
 
-const formats = [
-  'header', 'font', 'size',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'link', 'image', 'video'
-]
-
-const styles = {
-  textArea: {
-    height: 300
-  }
-}
+const formats = ['header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'list', 'bullet', 'link']
 
 export default class Template extends Component {
   constructor (props) {
     super(props)
     this.state = {
       text: `<p>Hello %${props.headers[0]}%</p>`,
-      headers: props.headers,
-      idHeaders: null,
-      data: props.data,
       subject: ''
     }
-    this.handleChange = this.handleChange.bind(this)
+    this.identiferButtons = this.identiferButtons.bind(this)
+    this.dropText = this.dropText.bind(this)
     this.handleSubject = this.handleSubject.bind(this)
-    this.buildIdentifer = this.buildIdentifer.bind(this)
-    this.handleTemplate = this.handleTemplate.bind(this)
-    this.buildHeaders = this.buildHeaders.bind(this)
-    this.replaceAll = this.replaceAll.bind(this)
+    this.handleText = this.handleText.bind(this)
     this.getSampleData = this.getSampleData.bind(this)
+    this.replaceAll = this.replaceAll.bind(this)
   }
 
-  handleChange (value) {
-    this.setState({ text: value })
+  identiferButtons () {
+    return this.props.headers.map(head => (<FlatButton label={`%${head}%`} style={{ margin: 12 }} onClick={() => this.dropText(`%${head}%`)} />))
+  }
+
+  dropText (head) {
+    this.setState({ text: this.state.text.concat(head) })
   }
 
   handleSubject (event) {
     this.setState({ subject: event.target.value })
   }
 
-  buildHeaders () {
-    const tableHeads = []
-    const idHeads = []
-    this.state.headers.forEach(head => {
-      const id = `%${head}%`
-      idHeads.push(id)
-      tableHeads.push(<Cell minWidthPx={50} key={`cell`}>{id}</Cell>)
-    })
-    return {
-      table: tableHeads,
-      id: idHeads
-    }
-  }
-
-  buildIdentifer () {
-    const tableHeads = this.buildHeaders().table
-    return tableHeads
-  }
-
-  handleTemplate () {
-    this.setState({ idHeaders: this.buildHeaders().id }, () => this.props.handleTemplate(this.state.text, this.state.idHeaders))
-  }
-
-  replaceAll (str, find, replace) {
-    return str.replace(new RegExp(find, 'ig'), replace)
+  handleText (value) {
+    this.setState({ text: value })
   }
 
   getSampleData () {
     let preview = this.state.text
-    this.state.headers.forEach(head => {
-      const identifer = `%${head}%`
-      if (this.buildHeaders().id.includes(identifer)) {
-        preview = this.replaceAll(preview, identifer, this.state.data[0][head])
-      }
+    this.props.headers.forEach(head => {
+      preview = this.replaceAll({str: preview, find: `%${head}%`, replace: this.props.data[0][head]})
     })
     return preview
+  }
+
+  replaceAll ({ str, find, replace }) {
+    return str.replace(new RegExp(find, 'ig'), replace)
   }
 
   render () {
     return (
       <div>
-        <MenuBar title='The following are identifers you can use:' />
+        <MenuBar title='Click on or Type the Following Identifiers:' />
         <br /><br />
         <Paper zDepth={2}>
-          <div className='md-table'>
-            <Table material className='md-table'>
-              <Row header key='row'>
-                {this.buildIdentifer()}
-              </Row>
-            </Table>
+          <div>
+            {this.identiferButtons()}
           </div>
         </Paper>
         <br /><br />
         <MenuBar title='Write Your Template' />
         <br /><br />
-        <div>
-          <TextField
-            floatingLabelText='Subject'
-            fullWidth
-            value={this.state.subject}
-            onChange={this.handleSubject} />
-        </div>
+        <TextField
+          hintText='Subject'
+          fullWidth
+          value={this.state.subject}
+          onChange={this.handleSubject}
+            />
         <br /><br />
-        <Paper zDepth={2}>
-          <div>
-            <ReactQuill
-              value={this.state.text}
-              onChange={this.handleChange}
-              modules={modules}
-              formats={formats}
-              style={styles.textArea}
+        <div>
+          <ReactQuill
+            value={this.state.text}
+            onChange={this.handleText}
+            modules={modules}
+            formats={formats}
+            style={{ height: 300 }}
               />
-          </div>
-        </Paper>
+          <br /><br />
+        </div>
         <br /><br />
         <MenuBar title='Live Preview' expandable />
         <br /><br />
@@ -151,4 +110,12 @@ export default class Template extends Component {
       </div>
     )
   }
+}
+
+Template.propTypes = {
+  data: PropTypes.array.isRequired,
+  headers: PropTypes.array.isRequired,
+  handleTemplate: PropTypes.func.isRequired,
+  backToContactPrev: PropTypes.func.isRequired,
+  confirmSend: PropTypes.func.isRequired
 }
