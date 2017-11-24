@@ -105,11 +105,9 @@ export default class Controller extends Component {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200) {
-          console.log(response)
-          this.setState({ view: 'success', loading: false })
-        } else if (xhr.status === 404) {
-          console.log(response)
-          this.setState({ loading: false })
+          if (response.msg === 'sucess') {
+            this.setState({ view: 'success', loading: false })
+          }
         }
       }
     }

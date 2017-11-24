@@ -21,12 +21,10 @@ routes.post('/api/form', (req, res) => {
 })
 
 routes.post('/api/send-email', (req, res) => {
-  parseData(req.body, (error) => {
-    if (error) {
-      res.status(404).send({msg: 'fail'})
-    } else {
-      res.status(200).send({msg: 'success'})
-    }
+  parseData(req.body).then(res.status(200).send({msg: 'success'}))
+  .catch(error => {
+    console.log(error)
+    res.status(404).send({msg: 'error'})
   })
 })
 

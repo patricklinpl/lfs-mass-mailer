@@ -1,40 +1,45 @@
 import nodemailer from 'nodemailer'
+import Promise from 'bluebird'
+
 require('dotenv').config()
 
-const replaceAll = (str, find, replace) => {
+const replaceAll = ({ str, find, replace }) => {
   return str.replace(new RegExp(find, 'ig'), replace)
 }
 
-const makeBody = (contact, html, headers) => {
-  let personalBody = html
+const makeBody = ({ contact, body, headers }) => {
+  let personalBody = body
   headers.forEach(head => {
     const identifer = `%${head}%`
-    personalBody = replaceAll(personalBody, identifer, contact[head])
+    body = replaceAll({ str: personalBody, find: identifer, replace: contact[head] })
   })
   return personalBody
 }
 
-const parseData = (state, callback) => {
-  const email = state.emailID
-  let error = false
-  state.data.forEach(contact => {
-    const body = makeBody(contact, state.html, state.headers)
-    const mailOptions = {
+const makeOptions = (state) => (
+  state.data.map(contact => {
+    const body = makeBody({ contact: contact, body: state.html, headers: state.headers })
+    return {
       from: `${process.env.ACCOUNT_NAME} <${process.env.ACCOUNT_EMAIL}>`,
-      to: contact[email],
+      to: contact[state.emailID],
       subject: state.subject,
       html: body
     }
-    sendEmail(mailOptions, (err) => {
-      if (err) {
-        error = true
-        callback(err)
-      }
-    })
   })
-  if (error === false) {
-    callback(null)
-  }
+)
+
+const parseData = (state) => {
+  return new Promise((resolve) => {
+    const csv = makeOptions(state)
+    csv.map(mailOption => {
+      sendEmail(mailOption, (err) => {
+        if (err) {
+          console.log(err)
+        }
+      })
+    })
+    resolve()
+  })
 }
 
 const sendEmail = (mailOptions, cb) => {
