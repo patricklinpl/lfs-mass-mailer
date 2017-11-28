@@ -19,7 +19,7 @@
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
     "clean": "rimraf dist",
     "test-react": "react-scripts test --env=jsdom",
-    "test": "jest --watchAll",
+    "test": "jest",
     "eject": "react-scripts eject"
   },
   "dependencies": {
