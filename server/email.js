@@ -60,5 +60,9 @@ const sendEmail = (mailOptions, cb) => {
 }
 
 export {
-  parseData
+  parseData,
+  replaceAll,
+  makeBody,
+  makeOptions,
+  sendEmail
 }
