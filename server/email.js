@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer'
-import Promise from 'bluebird'
-
+import { setTimeout } from 'timers'
 require('dotenv').config()
 
 const replaceAll = ({ str, find, replace }) => {
@@ -28,18 +27,16 @@ const makeOptions = (state) => (
   })
 )
 
-const parseData = (state) => {
-  return new Promise((resolve) => {
-    const csv = makeOptions(state)
-    csv.map(mailOption => {
-      sendEmail(mailOption, (err) => {
-        if (err) {
-          console.log(err)
-        }
-      })
-    })
-    resolve()
-  })
+const parseData = (state, callback) => {
+  const csv = makeOptions(state)
+  for (let i = 0; i < csv.length; i++) {
+    setTimeout(() => sendEmail(csv[i], (err) => {
+      if (err) {
+        console.log(err)
+      }
+    }), i * 100)
+  }
+  callback(null)
 }
 
 const sendEmail = (mailOptions, cb) => {
@@ -50,14 +47,6 @@ const sendEmail = (mailOptions, cb) => {
     auth: {
       user: process.env.ACCOUNT_USER,
       pass: process.env.ACCOUNT_PASS
-    }
-  })
-
-  transporter.verify((error, success) => {
-    if (error) {
-      console.log(error)
-    } else {
-      console.log('Server is ready to take our messages')
     }
   })
 

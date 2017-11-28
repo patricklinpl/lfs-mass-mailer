@@ -104,10 +104,8 @@ export default class Controller extends Component {
     xhr.onload = () => {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response)
-        if (xhr.status === 200) {
-          if (response.msg === 'sucess') {
-            this.setState({ view: 'success', loading: false })
-          }
+        if (xhr.status === 200 && response.msg === 'success') {
+          this.setState({ view: 'success', loading: false })
         }
       }
     }
