@@ -2,8 +2,6 @@ version: 2
 jobs:
   build:
     working_directory: ~/lfs-mass-mailer
-    docker:
-      - image: circleci/node:4.8.2
     steps:
       - checkout
       - run:
@@ -14,6 +12,9 @@ jobs:
       - run:
           name: install-npm-wee
           command: npm install
+      - run:
+          name: install-npm-dev
+          command: npm install --dev
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
