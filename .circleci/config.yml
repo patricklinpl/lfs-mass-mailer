@@ -1,6 +1,23 @@
-machine:
-  node:
-    version: 7.7.4
-test:
-  override:
-    - npm run test
+version: 2
+jobs:
+  build:
+    working_directory: ~/lfs-mass-mailer
+    docker:
+      - image: circleci/node:latest
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm
+          command: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: test
+          command: npm test
