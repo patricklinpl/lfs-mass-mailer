@@ -1,37 +1,6 @@
-version: 2
-jobs:
-  build:
-    working_directory: ~/lfs-mass-mailer
-    docker:
-      - image: circleci/node:4.8.2
-    steps:
-      - checkout
-      - run:
-          name: update-npm
-          command: 'sudo npm install -g npm@latest'
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: install-npm-wee
-          command: npm install
-      - run:
-          name: install-npm-dev
-          command: npm install --dev
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: test
-          command: npm test
-      - run:
-          name: code-coverage
-          command: './node_modules/.bin/nyc report --reporter=text-lcov'
-      - store_artifacts:
-          path: test-results.xml
-          prefix: tests
-      - store_artifacts:
-          path: coverage
-          prefix: coverage
-      - store_test_results:
-          path: test-results.xml
+machine:
+  node:
+    version: 7.7.4
+test:
+  override:
+    - npm run test
