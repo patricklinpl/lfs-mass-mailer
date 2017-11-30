@@ -25,7 +25,8 @@ export default class Template extends Component {
     super(props)
     this.state = {
       text: `<p>Hello %${props.headers[0]}%</p>`,
-      subject: ''
+      subject: '',
+      error: 'This field is required',
     }
     this.identiferButtons = this.identiferButtons.bind(this)
     this.dropText = this.dropText.bind(this)
@@ -44,7 +45,7 @@ export default class Template extends Component {
   }
 
   handleSubject (event) {
-    this.setState({ subject: event.target.value })
+    event.target.value === '' ? this.setState({ subject: event.target.value, error: 'This field is required' }) : this.setState({ subject: event.target.value, error: '' })
   }
 
   handleText (value) {
@@ -79,6 +80,7 @@ export default class Template extends Component {
         <TextField
           hintText='Subject'
           fullWidth
+          errorText={this.state.error}
           value={this.state.subject}
           onChange={this.handleSubject}
             />
