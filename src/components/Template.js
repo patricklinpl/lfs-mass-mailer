@@ -26,7 +26,7 @@ export default class Template extends Component {
     this.state = {
       text: `<p>Hello %${props.headers[0]}%</p>`,
       subject: '',
-      error: 'This field is required',
+      error: 'This field is required'
     }
     this.identiferButtons = this.identiferButtons.bind(this)
     this.dropText = this.dropText.bind(this)
