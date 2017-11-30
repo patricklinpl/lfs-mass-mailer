@@ -11,17 +11,24 @@
 git clone
 npm install
 ```
-### React-Dev
+### React Dev
 
 ```sh
 npm run start-react
 ```
 
-### Local Dev & Production
+### Local Dev
 
 ```sh
 npm run build-react
 npm run start
+```
+
+### Production
+
+```sh
+npm run build-react
+npm run build
 ```
 
 ## Setup SMTP server
