@@ -10,7 +10,7 @@ const makeBody = ({ contact, body, headers }) => {
   let personalBody = body
   headers.forEach(head => {
     const identifer = `%${head}%`
-    body = replaceAll({ str: personalBody, find: identifer, replace: contact[head] })
+    personalBody = replaceAll({ str: personalBody, find: identifer, replace: contact[head] })
   })
   return personalBody
 }
@@ -47,6 +47,9 @@ const sendEmail = (mailOptions, cb) => {
     auth: {
       user: process.env.ACCOUNT_USER,
       pass: process.env.ACCOUNT_PASS
+    },
+    tls: {
+      rejectUnauthorized: false
     }
   })
 
