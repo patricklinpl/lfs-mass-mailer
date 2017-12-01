@@ -1,7 +1,7 @@
 # Mass Mailer
 
 [![Build Status](https://travis-ci.org/UBC-LFS/lfs-mass-mailer.svg?branch=master)](https://travis-ci.org/UBC-LFS/lfs-mass-mailer)
-[![Known Vulnerabilities](https://snyk.io/test/github/patricklinpl/lfs-mass-mailer/badge.svg)](https://snyk.io/test/github/patricklinpl/lfs-mass-mailer)
+[![Known Vulnerabilities](https://snyk.io/test/github/UBC-LFS/lfs-mass-mailer/badge.svg)](https://snyk.io/test/github/UBC-LFS/lfs-mass-mailer)
 [![tested with jest](https://img.shields.io/badge/tested_with-jest-99424f.svg)](http://facebook.github.io/jest/)
 [![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
