@@ -20,6 +20,9 @@ npm run start-react
 
 Fullstack:
 npm run build-react && npm start
+
+Electron: (Electron Branch)
+npm run build-react && npm build && start-electron
 ```
 
 ### Production
