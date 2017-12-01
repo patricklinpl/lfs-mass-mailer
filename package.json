@@ -22,7 +22,7 @@
     "test-react": "react-scripts test --env=jsdom",
     "test": "jest",
     "eject": "react-scripts eject",
-    "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=build/icon.icns --prune=true --out=release-builds"
+    "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=icons/icon.icns --prune=true --out=release-builds"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
