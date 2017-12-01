@@ -5,7 +5,7 @@
   "description": "Versatile mail application for UBC LFS",
   "author": "Patrick Lin <paatricklinn@gmail.com>",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "main.js",
   "engines": {
     "node": "~6.9.1",
     "npm": ">=3.10.0"
@@ -13,6 +13,7 @@
   "scripts": {
     "prestart": "npm run -s build",
     "start": "node dist/index.js",
+    "start-electron": "electron .",
     "build": "npm run clean && mkdir -p dist && babel server -s -D -d dist",
     "start-react": "react-scripts start",
     "build-react": "rm -rf public/build && react-scripts build && mv build public",
@@ -46,6 +47,7 @@
     "babel-jest": "^21.2.0",
     "babel-register": "^6.26.0",
     "dotenv": "^4.0.0",
+    "electron": "^1.7.9",
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
     "standard": "^10.0.3",
