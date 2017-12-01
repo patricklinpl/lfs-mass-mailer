@@ -21,7 +21,8 @@
     "clean": "rimraf dist",
     "test-react": "react-scripts test --env=jsdom",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=build/icon.icns --prune=true --out=release-builds"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -48,6 +49,7 @@
     "babel-register": "^6.26.0",
     "dotenv": "^4.0.0",
     "electron": "^1.7.9",
+    "electron-packager": "^10.1.0",
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
     "standard": "^10.0.3",
