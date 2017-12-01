@@ -19,7 +19,7 @@
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
     "clean": "rimraf dist",
     "test-react": "react-scripts test --env=jsdom",
-    "test": "jest",
+    "test": "jest && codecov",
     "eject": "react-scripts eject"
   },
   "dependencies": {
@@ -45,11 +45,16 @@
   "devDependencies": {
     "babel-jest": "^21.2.0",
     "babel-register": "^6.26.0",
+    "codecov": "^3.0.0",
     "dotenv": "^4.0.0",
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
     "standard": "^10.0.3",
     "supertest": "^3.0.0"
+  },
+  "jest": {
+    "coverageDirectory": "./coverage/",
+    "collectCoverage": true
   },
   "babel": {
     "presets": [

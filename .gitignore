@@ -48,3 +48,4 @@ dist
 uploads/*
 !uploads/.gitkeep
 .env
+release-builds
