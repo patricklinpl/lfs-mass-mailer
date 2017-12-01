@@ -26,13 +26,17 @@ Fullstack:
 npm run build-react && npm start
 
 Electron: (Electron Branch)
-npm run build-react && npm build && start-electron
+npm run build-react && npm run build && npm run start-electron
 ```
 
 ### Production
 
 ```sh
+Fullstack (Minified):
 npm run build-react && build
+
+Electron: (Electron Branch)
+npm run build-react && npm run build && npm run package-mac
 ```
 
 ## Setup SMTP server
