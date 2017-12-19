@@ -1,5 +1,6 @@
-/* global XMLHttpRequest, FormData */
+/* global XMLHttpRequest */
 import React, { Component } from 'react'
+import Papa from 'papaparse'
 import { showPreview, showTemplate, findEmails, getValidEmails } from '../scripts/util'
 import Form from '../components/Form'
 import Preview from '../components/Preview'
@@ -30,6 +31,7 @@ export default class Controller extends Component {
     this.sendEmail = this.sendEmail.bind(this)
     this.closeAndSend = this.closeAndSend.bind(this)
     this.loadOn = this.loadOn.bind(this)
+    this.determineError = this.determineError.bind(this)
   }
 
   /** ===== Form.js Functions ===== */
@@ -42,28 +44,39 @@ export default class Controller extends Component {
     this.setState({ loading: true })
   }
 
+  determineError (file) {
+    if (file.type !== 'text/csv') {
+      return 'Unsupported file format'
+    }
+    if (file.size > 10000000) {
+      return 'File too large'
+    }
+  }
+
   handleUpload (state) {
     return event => {
       event.preventDefault()
       this.loadOn()
-      const xhr = new XMLHttpRequest()
-      let FD = new FormData()
-      for (let name in state) {
-        FD.append(name, state[name])
-      }
-      xhr.onload = () => {
-        if (xhr.readyState === 4) {
-          const response = JSON.parse(xhr.response)
-          if (xhr.status === 200) {
-            this.getHeaders(response.csv)
-            this.setState({ view: 'preview', data: response.csv, emailHeader: findEmails({ headers: this.state.headers, data: response.csv }), loading: false })
-          } else if (xhr.status === 404) {
-            this.setState({ title: 'Error', msg: response.msg, open: true, loading: false })
+      if (state.files.type === 'text/csv' && state.files.size <= 10000000) {
+        Papa.parse(state.files, {
+          delimiter: ',',
+          header: true,
+          complete: (results, file) => {
+            if (results.data.length > 0) {
+              this.getHeaders(results.data)
+              this.setState({ view: 'preview', data: results.data, emailHeader: findEmails({ headers: this.state.headers, data: results.data }), loading: false })
+            } else {
+              this.setState({ title: 'Error', msg: 'Empty CSV!', open: true, loading: false })
+            }
+          },
+          error: (error, file) => {
+            console.log(error)
+            this.setState({ title: 'Error', msg: 'Something went wrong!', open: true, loading: false })
           }
-        }
+        })
+      } else {
+        this.setState({ title: 'Error', msg: this.determineError(state.files), open: true, loading: false })
       }
-      xhr.open('POST', 'api/form')
-      xhr.send(FD)
     }
   }
 
