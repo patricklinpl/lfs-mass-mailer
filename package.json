@@ -41,8 +41,7 @@
     "react-quill": "^1.1.0",
     "react-responsive-table": "^2.0.15",
     "react-scripts": "1.0.15",
-    "rimraf": "^2.6.2",
-    "shx": "^0.2.2"
+    "rimraf": "^2.6.2"
   },
   "devDependencies": {
     "babel-jest": "^21.2.0",
@@ -52,7 +51,8 @@
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
     "standard": "^10.0.3",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "shx": "^0.2.2"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
