@@ -45,7 +45,7 @@ export default class Controller extends Component {
   }
 
   determineError (file) {
-    if (file.type !== 'text/csv') {
+    if (file.type !== 'text/csv' || file.type !== 'application/vnd.ms-excel') {
       return 'Unsupported file format'
     }
     if (file.size > 10000000) {
@@ -57,7 +57,7 @@ export default class Controller extends Component {
     return event => {
       event.preventDefault()
       this.loadOn()
-      if (state.files.type === 'text/csv' && state.files.size <= 10000000) {
+      if ((state.files.type === 'text/csv' || state.files.type === 'application/vnd.ms-excel') && state.files.size <= 10000000) {
         Papa.parse(state.files, {
           delimiter: ',',
           header: true,
