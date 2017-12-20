@@ -64,7 +64,8 @@ export default class Controller extends Component {
           complete: (results, file) => {
             if (results.data.length > 0) {
               this.getHeaders(results.data)
-              this.setState({ view: 'preview', data: results.data, emailHeader: findEmails({ headers: this.state.headers, data: results.data }), loading: false })
+              const pruneData = results.data.filter(obj => (Object.keys(obj).length === this.state.headers.length))
+              this.setState({ view: 'preview', data: pruneData, emailHeader: findEmails({ headers: this.state.headers, data: pruneData }), loading: false })
             } else {
               this.setState({ title: 'Error', msg: 'Empty CSV!', open: true, loading: false })
             }
