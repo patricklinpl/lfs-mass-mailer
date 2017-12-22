@@ -22,7 +22,8 @@
     "test-react": "react-scripts test --env=jsdom",
     "test": "jest && codecov",
     "eject": "react-scripts eject",
-    "package-mac": "electron-packager . --overwrite --asar=true --platform=darwin --arch=x64 --icon=icons/icon.icns --prune=true --out=release-builds"
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=icons/icon.icns --prune=true --out=release-builds", 
+    "package-win": "electron-packager . lfs-mass-mailer --overwrite --platform=win32 --arch=ia32 --icon=assets/icons/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"lfs-mass-mailer\""
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
