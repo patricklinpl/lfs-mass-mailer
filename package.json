@@ -14,9 +14,9 @@
     "prestart": "npm run -s build",
     "start": "node dist/index.js",
     "start-electron": "electron .",
-    "build": "npm run clean && mkdir -p dist && babel server -s -D -d dist",
+    "build": "npm run clean && shx mkdir -p dist && babel server -s -D -d dist",
     "start-react": "react-scripts start",
-    "build-react": "rm -rf public/build && react-scripts build && mv build public",
+    "build-react": "rimraf -rf public/build && react-scripts build && shx mv build public",
     "dev": "nodemon src/index.js --exec \"node -r dotenv/config -r babel-register\"",
     "clean": "rimraf dist",
     "test-react": "react-scripts test --env=jsdom",
@@ -55,7 +55,8 @@
     "jest": "^21.2.1",
     "nodemon": "^1.12.1",
     "standard": "^10.0.3",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "shx": "^0.2.2"
   },
   "jest": {
     "coverageDirectory": "./coverage/",

@@ -6,6 +6,7 @@ import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
 import Success from '../components/Success'
+import Error from '../components/Error'
 import Loading from '../components/Loading'
 import Footer from '../components/Footer'
 import Alert from '../components/Alert'
@@ -24,7 +25,8 @@ export default class Controller extends Component {
       loading: false,
       title: '',
       msg: '',
-      open: false
+      open: false,
+      error: ''
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -45,7 +47,7 @@ export default class Controller extends Component {
   }
 
   determineError (file) {
-    if (file.type !== 'text/csv') {
+    if (file.type !== 'text/csv' || file.type !== 'application/vnd.ms-excel') {
       return 'Unsupported file format'
     }
     if (file.size > 10000000) {
@@ -57,14 +59,15 @@ export default class Controller extends Component {
     return event => {
       event.preventDefault()
       this.loadOn()
-      if (state.files.type === 'text/csv' && state.files.size <= 10000000) {
+      if ((state.files.type === 'text/csv' || state.files.type === 'application/vnd.ms-excel') && state.files.size <= 10000000) {
         Papa.parse(state.files, {
           delimiter: ',',
           header: true,
           complete: (results, file) => {
             if (results.data.length > 0) {
               this.getHeaders(results.data)
-              this.setState({ view: 'preview', data: results.data, emailHeader: findEmails({ headers: this.state.headers, data: results.data }), loading: false })
+              const pruneData = results.data.filter(obj => (Object.keys(obj).length === this.state.headers.length))
+              this.setState({ view: 'preview', data: pruneData, emailHeader: findEmails({ headers: this.state.headers, data: pruneData }), loading: false })
             } else {
               this.setState({ title: 'Error', msg: 'Empty CSV!', open: true, loading: false })
             }
@@ -119,6 +122,8 @@ export default class Controller extends Component {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200 && response.msg === 'success') {
           this.setState({ view: 'success', loading: false })
+        } else {
+          this.setState({ view: 'error', error: response.error, loading: false })
         }
       }
     }
@@ -164,6 +169,7 @@ export default class Controller extends Component {
             confirmSend={this.confirmSend.bind(this)}
           /> : null}
         {this.state.loading === true ? <Loading /> : null}
+        {this.state.view === 'error' ? <Error reset={this.reset.bind(this)} error={this.state.error} /> : null}
         {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} /> : null}
         <Footer />
         <Alert

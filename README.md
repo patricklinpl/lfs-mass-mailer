@@ -23,20 +23,26 @@ Frontend:
 npm run start-react
 
 Fullstack:
-npm run build-react && npm start
+npm run build-react 
+npm start
 
 Electron: (Electron Branch)
-npm run build-react && npm run build && npm run start-electron
+npm run build-react 
+npm run build 
+npm run start-electron
 ```
 
 ### Production
 
 ```sh
 Fullstack (Minified):
-npm run build-react && build
+npm run build-react
+npm run build
 
 Electron: (Electron Branch)
-npm run build-react && npm run build && npm run package-mac
+npm run build-react 
+npm run build 
+npm run package-mac
 ```
 
 ## Setup SMTP server
