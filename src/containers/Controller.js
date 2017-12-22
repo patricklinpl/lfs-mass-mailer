@@ -6,6 +6,7 @@ import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
 import Success from '../components/Success'
+import Error from '../components/Error'
 import Loading from '../components/Loading'
 import Footer from '../components/Footer'
 import Alert from '../components/Alert'
@@ -24,7 +25,8 @@ export default class Controller extends Component {
       loading: false,
       title: '',
       msg: '',
-      open: false
+      open: false,
+      error: ''
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -120,6 +122,8 @@ export default class Controller extends Component {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200 && response.msg === 'success') {
           this.setState({ view: 'success', loading: false })
+        } else {
+          this.setState({ view: 'error', error: response.error, loading: false })
         }
       }
     }
@@ -165,6 +169,7 @@ export default class Controller extends Component {
             confirmSend={this.confirmSend.bind(this)}
           /> : null}
         {this.state.loading === true ? <Loading /> : null}
+        {this.state.view === 'error' ? <Error reset={this.reset.bind(this)} error={this.state.error} /> : null}
         {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} /> : null}
         <Footer />
         <Alert

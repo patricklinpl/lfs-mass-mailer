@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import { setTimeout } from 'timers'
+import Promise from 'bluebird'
 require('dotenv').config()
 
 const replaceAll = ({ str, find, replace }) => {
@@ -27,38 +28,54 @@ const makeOptions = (state) => (
   })
 )
 
-const parseData = (state, callback) => {
-  const csv = makeOptions(state)
-  for (let i = 0; i < csv.length; i++) {
-    setTimeout(() => sendEmail(csv[i], (err) => {
-      if (err) {
-        console.log(err)
-      }
-    }), i * 100)
-  }
-  callback(null)
+const parseData = (state) => {
+  return new Promise((resolve, reject) => {
+    const csv = makeOptions(state)
+    const sendArray = []
+    for (let i = 0; i < csv.length; i++) {
+      sendArray.push(timeOut(csv[i], i))
+    }
+    Promise.all(sendArray)
+    .then(() => resolve())
+    .catch(error => {
+      console.log(error)
+      reject(error)
+    })
+  })
+}
+
+const timeOut = (profile, i) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      sendEmail(profile)
+      .then(() => resolve())
+      .catch((error) => reject(error))
+    }, i * 100)
+  })
 }
 
 const sendEmail = (mailOptions, cb) => {
-  const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: process.env.EMAIL_SECURE,
-    auth: {
-      user: process.env.ACCOUNT_USER,
-      pass: process.env.ACCOUNT_PASS
-    },
-    tls: {
-      rejectUnauthorized: false
-    }
-  })
-
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      cb(error)
-      return
-    }
-    return console.log('Message sent: %s', info.messageId)
+  return new Promise((resolve, reject) => {
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST,
+      port: process.env.EMAIL_PORT,
+      secure: process.env.EMAIL_SECURE,
+      auth: {
+        user: process.env.ACCOUNT_USER,
+        pass: process.env.ACCOUNT_PASS
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    })
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error)
+        return
+      }
+      console.log('Message sent: %s', info.messageId)
+      resolve()
+    })
   })
 }
 
