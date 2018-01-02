@@ -1,7 +1,7 @@
 /* global XMLHttpRequest */
 import React, { Component } from 'react'
 import Papa from 'papaparse'
-import { showPreview, showTemplate, findEmails, getValidEmails } from '../scripts/util'
+import { showPreview, showTemplate, findEmails, getValidEmails, getInvalidEmails } from '../scripts/util'
 import Form from '../components/Form'
 import Preview from '../components/Preview'
 import Template from '../components/Template'
@@ -69,7 +69,7 @@ export default class Controller extends Component {
               this.getHeaders(results.data)
               const pruneData = results.data.filter(obj => {
                 if (Object.keys(obj).length === this.state.headers.length) {
-                  return Object.values(obj).reduce((acc, curr) => (acc + curr.length), 0) === 0 ? false : true  
+                  return Object.values(obj).reduce((acc, curr) => (acc + curr.length), 0) !== 0
                 }
                 return false
               })
@@ -98,7 +98,12 @@ export default class Controller extends Component {
   writeTemplate () {
     if (this.state.emailHeader) {
       const emails = getValidEmails({ data: this.state.data, emailHeader: this.state.emailHeader })
-      emails.length === this.state.data.length ? this.setState({ view: 'write', validEmail: emails }) : this.setState({ title: 'Error', open: true, msg: 'Invalid Email Identifier: Make sure all rows are filled with valid emails!' })
+      if (emails.length === this.state.data.length) {
+        this.setState({ view: 'write', validEmail: emails })
+      } else {
+        const errorRow = getInvalidEmails({ data: this.state.data, emailHeader: this.state.emailHeader })
+        this.setState({ title: 'Error', open: true, msg: `Invalid Email Identifier, the following row invalid: ${JSON.stringify(errorRow)}` })
+      }
     } else {
       this.setState({ title: 'Error', open: true, msg: 'Please Select an Identifier' })
     }
