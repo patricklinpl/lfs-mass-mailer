@@ -63,10 +63,16 @@ export default class Controller extends Component {
         Papa.parse(state.files, {
           delimiter: ',',
           header: true,
+          skipEmptyLines: true,
           complete: (results, file) => {
             if (results.data.length > 0) {
               this.getHeaders(results.data)
-              const pruneData = results.data.filter(obj => (Object.keys(obj).length === this.state.headers.length))
+              const pruneData = results.data.filter(obj => {
+                if (Object.keys(obj).length === this.state.headers.length) {
+                  return Object.values(obj).reduce((acc, curr) => (acc + curr.length), 0) === 0 ? false : true  
+                }
+                return false
+              })
               this.setState({ view: 'preview', data: pruneData, emailHeader: findEmails({ headers: this.state.headers, data: pruneData }), loading: false })
             } else {
               this.setState({ title: 'Error', msg: 'Empty CSV!', open: true, loading: false })
