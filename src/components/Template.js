@@ -57,7 +57,7 @@ export default class Template extends Component {
     this.props.headers.forEach(head => {
       preview = this.replaceAll({str: preview, find: `%${head}%`, replace: this.props.data[0][head]})
     })
-    return preview
+    return preview.replace(new RegExp('<p><br></p>', 'ig'), '<br>')
   }
 
   replaceAll ({ str, find, replace }) {
