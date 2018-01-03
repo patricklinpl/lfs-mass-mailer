@@ -47,12 +47,13 @@ export default class Controller extends Component {
   }
 
   determineError (file) {
-    if (file.type !== 'text/csv' || file.type !== 'application/vnd.ms-excel') {
-      return 'Unsupported file format'
+    if (file.type !== 'text/csv' && file.type !== 'application/vnd.ms-excel') {
+      return 'Unsupported file format, .CSV only'
     }
     if (file.size > 10000000) {
-      return 'File too large'
+      return 'File should be under 10mb'
     }
+    return 'Unknown Error'
   }
 
   handleUpload (state) {
@@ -102,7 +103,8 @@ export default class Controller extends Component {
         this.setState({ view: 'write', validEmail: emails })
       } else {
         const errorRow = getInvalidEmails({ data: this.state.data, emailHeader: this.state.emailHeader })
-        this.setState({ title: 'Error', open: true, msg: `Invalid Email Identifier, the following row invalid: ${JSON.stringify(errorRow)}` })
+        const errorNumber = errorRow.length
+        this.setState({ title: 'Error', open: true, msg: `Invalid Email Identifier. Number of row errors ${errorNumber}: ${JSON.stringify(errorRow[0])}` })
       }
     } else {
       this.setState({ title: 'Error', open: true, msg: 'Please Select an Identifier' })
