@@ -38,7 +38,7 @@ export default class Form extends Component {
           <Card>
             <CardHeader
               title='Upload Contacts via .CSV'
-              subtitle='Please upload a properly formatted .csv file. An example template file can be found at secure.landfood.ubc.ca. Files must be under 10mb. All other file types are rejected.'
+              subtitle='Please upload a properly formatted .csv file. Files must be under 10mb. All other file types are rejected.'
               />
             <CardActions>
               <RaisedButton
