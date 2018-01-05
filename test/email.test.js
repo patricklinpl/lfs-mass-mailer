@@ -62,7 +62,7 @@ describe('makeOptions', () => {
       subject: 'test',
       html: '<p>Hello %First Name%</p>' }
 
-    //local test, from: 'FirstName LastName <email>'
+    // local test, from: 'FirstName LastName <email>'
     const output = [ { from: 'undefined <undefined>',
       to: 'patricklin@alumni.ubc.ca',
       subject: 'test',
@@ -78,7 +78,7 @@ describe('makeOptions', () => {
       subject: 'test',
       html: '' }
 
-    //local test, from: 'FirstName LastName <email>'
+    // local test, from: 'FirstName LastName <email>'
     const output = [ { from: 'undefined <undefined>',
       to: undefined,
       subject: 'test',
@@ -98,7 +98,7 @@ describe('parseData', () => {
       headers: [ 'First Name', 'Last Name', 'Email' ],
       subject: 'testsuite - succesful send',
       html: '<p>Hello %First Name%</p>' }
-      //local test, parseData(state).then(data => expect(data).toEqual('Success'))
+      // local test, parseData(state).then(data => expect(data).toEqual('Success'))
     return parseData(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
   it('empty data', () => {
@@ -108,7 +108,7 @@ describe('parseData', () => {
       headers: [ '' ],
       subject: 'test',
       html: '' }
-      //local test, parseData(state).catch(data => expect(data.message).toEqual('No recipients defined'))
+      // local test, parseData(state).catch(data => expect(data.message).toEqual('No recipients defined'))
     return parseData(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
   it('empty subject', () => {
@@ -120,7 +120,7 @@ describe('parseData', () => {
       headers: [ 'First Name', 'Last Name', 'Email' ],
       subject: '',
       html: '' }
-      //local test, parseData(state).then(data => expect(data).toEqual('Success')) // check spam
+      // local test, parseData(state).then(data => expect(data).toEqual('Success')) // check spam
     return parseData(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
 })
@@ -131,7 +131,7 @@ describe('sendEmail', () => {
       to: 'patricklin@alumni.ubc.ca',
       subject: 'testsuite',
       html: '<p>Hello Patrick</p>' }
-      //local test, sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent'))
+      // local test, sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent'))
     return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
   it('no email', () => {
@@ -139,7 +139,7 @@ describe('sendEmail', () => {
       to: '',
       subject: 'testsuite',
       html: '<p>Hello Patrick</p>' }
-      //local test, sendEmail(mailOptions).catch(data => expect(data.message).toEqual('No recipients defined'))
+      // local test, sendEmail(mailOptions).catch(data => expect(data.message).toEqual('No recipients defined'))
     return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
   it('no subject', () => {
@@ -147,7 +147,7 @@ describe('sendEmail', () => {
       to: 'patricklin@alumni.ubc.ca',
       subject: '',
       html: '<p>Hello Patrick</p>' }
-      //local test, sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent')) // check spam
+      // local test, sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent')) // check spam
     return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
 })
