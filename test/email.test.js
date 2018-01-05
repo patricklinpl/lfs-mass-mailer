@@ -132,7 +132,7 @@ describe('sendEmail', () => {
       subject: 'testsuite',
       html: '<p>Hello Patrick</p>' }
       //local test, sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent'))
-    return sendEmail(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
+    return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
   it('no email', () => {
     const mailOptions = { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
@@ -140,7 +140,7 @@ describe('sendEmail', () => {
       subject: 'testsuite',
       html: '<p>Hello Patrick</p>' }
       //local test, sendEmail(mailOptions).catch(data => expect(data.message).toEqual('No recipients defined'))
-    return sendEmail(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
+    return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
   it('no subject', () => {
     const mailOptions = { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
@@ -148,6 +148,6 @@ describe('sendEmail', () => {
       subject: '',
       html: '<p>Hello Patrick</p>' }
       //local test, sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent')) // check spam
-    return sendEmail(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
+    return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
   })
 })
