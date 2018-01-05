@@ -1,4 +1,4 @@
-/* global describe, it */
+/* global describe, it, expect */
 import assert from 'assert'
 import { parseData, replaceAll, makeBody, makeOptions, sendEmail } from '../server/email.js'
 
@@ -22,31 +22,124 @@ describe('replaceAll', () => {
 
 describe('makeBody', () => {
   it('normal variables', () => {
-    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumnu.ubc.ca' }
+    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumni.ubc.ca' }
     const body = '<p>Hello %firstname%</p>'
     const headers = [ 'firstname', 'lastname', 'email' ]
     const output = '<p>Hello Patrick</p>'
     assert.deepEqual(makeBody({contact, body, headers}), output)
   })
   it('capital variables', () => {
-    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumnu.ubc.ca' }
+    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumni.ubc.ca' }
     const body = '<p>Hello %FIRSTNAME%</p>'
     const headers = [ 'firstname', 'lastname', 'email' ]
     const output = '<p>Hello Patrick</p>'
     assert.deepEqual(makeBody({contact, body, headers}), output)
   })
   it('capital and lowercase variables', () => {
-    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumnu.ubc.ca' }
+    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumni.ubc.ca' }
     const body = '<p>Hello %FIrstNAME%</p>'
     const headers = [ 'firstname', 'lastname', 'email' ]
     const output = '<p>Hello Patrick</p>'
     assert.deepEqual(makeBody({contact, body, headers}), output)
   })
-  it('false variable case', () => {
-    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumnu.ubc.ca' }
+  it('invalid variable case', () => {
+    const contact = { firstname: 'Patrick', lastname: 'Lin', email: 'patricklin@alumni.ubc.ca' }
     const body = '<p>Hello %FIrst NAME%</p>'
     const headers = [ 'firstname', 'lastname', 'email' ]
     const output = '<p>Hello %FIrst NAME%</p>'
     assert.deepEqual(makeBody({contact, body, headers}), output)
+  })
+})
+
+describe('makeOptions', () => {
+  it('expected variables', () => {
+    const state = { data:
+    [ { 'First Name': 'Patrick',
+      'Last Name': 'Lin',
+      'Email': 'patricklin@alumni.ubc.ca' } ],
+      emailID: 'Email',
+      headers: [ 'First Name', 'Last Name', 'Email' ],
+      subject: 'test',
+      html: '<p>Hello %First Name%</p>' }
+
+    const output = [ { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
+      to: 'patricklin@alumni.ubc.ca',
+      subject: 'test',
+      html: '<p>Hello Patrick</p>' } ]
+
+    assert.deepEqual(makeOptions(state), output)
+  })
+  it('empty values', () => {
+    const state = { data:
+    [ { } ],
+      emailID: '',
+      headers: [ '' ],
+      subject: 'test',
+      html: '' }
+
+    const output = [ { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
+      to: undefined,
+      subject: 'test',
+      html: '' } ]
+
+    assert.deepEqual(makeOptions(state), output)
+  })
+})
+
+describe('parseData', () => {
+  it('base case', () => {
+    const state = { data:
+    [ { 'First Name': 'Patrick',
+      'Last Name': 'Lin',
+      'Email': 'patricklin@alumni.ubc.ca' } ],
+      emailID: 'Email',
+      headers: [ 'First Name', 'Last Name', 'Email' ],
+      subject: 'testsuite - succesful send',
+      html: '<p>Hello %First Name%</p>' }
+    return parseData(state).then(data => expect(data).toEqual('Success'))
+  })
+  it('empty data', () => {
+    const state = { data:
+      [ { } ],
+      emailID: '',
+      headers: [ '' ],
+      subject: 'test',
+      html: '' }
+    return parseData(state).catch(data => expect(data.message).toEqual('No recipients defined'))
+  })
+  it('empty subject', () => {
+    const state = { data:
+    [ { 'First Name': 'Patrick',
+      'Last Name': 'Lin',
+      'Email': 'patricklin@alumni.ubc.ca' } ],
+      emailID: 'Email',
+      headers: [ 'First Name', 'Last Name', 'Email' ],
+      subject: '',
+      html: '' }
+    return parseData(state).then(data => expect(data).toEqual('Success')) // check spam
+  })
+})
+
+describe('sendEmail', () => {
+  it('base case', () => {
+    const mailOptions = { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
+      to: 'patricklin@alumni.ubc.ca',
+      subject: 'testsuite',
+      html: '<p>Hello Patrick</p>' }
+    return sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent'))
+  })
+  it('no email', () => {
+    const mailOptions = { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
+      to: '',
+      subject: 'testsuite',
+      html: '<p>Hello Patrick</p>' }
+    return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('No recipients defined'))
+  })
+  it('no subject', () => {
+    const mailOptions = { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
+      to: 'patricklin@alumni.ubc.ca',
+      subject: '',
+      html: '<p>Hello Patrick</p>' }
+    return sendEmail(mailOptions).then(data => expect(data).toEqual('Message sent')) // check spam
   })
 })
