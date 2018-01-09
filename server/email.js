@@ -48,6 +48,22 @@ const makeOptions = (state) => (
 )
 
 /**
+ * Conditional function to safeguard for invalid data formats
+ *
+ * @param {object} state
+ *   state = { data: [ { 'First Name': 'Bob', 'Email': 'bob@alumni.ubc.ca' } ],
+      emailID: 'Email',
+      headers: [ 'First Name', 'Email' ],
+      subject: 'test',
+      html: '<p>Hello %First Name%</p>' }
+ * @return {boolean}
+ */
+const proprtyCheck = (state) => (
+  state.hasOwnProperty('data') && state.hasOwnProperty('emailID') && state.hasOwnProperty('headers') && state.hasOwnProperty('subject') && state.hasOwnProperty('html') &&
+  state.data.length > 0 && state.headers.length > 0 && state.emailID !== ''
+)
+
+/**
  * Management function that adds a small delay on every every email and resolves after emails are sent
  *
  * @param {object} state
@@ -60,17 +76,21 @@ const makeOptions = (state) => (
  */
 const parseData = (state) => {
   return new Promise((resolve, reject) => {
-    const csv = makeOptions(state)
-    const sendArray = []
-    for (let i = 0; i < csv.length; i++) {
-      sendArray.push(timeOut(csv[i], i))
-    }
-    Promise.all(sendArray)
+    if (proprtyCheck(state)) {
+      const csv = makeOptions(state)
+      const sendArray = []
+      for (let i = 0; i < csv.length; i++) {
+        sendArray.push(timeOut(csv[i], i))
+      }
+      Promise.all(sendArray)
     .then(() => resolve('Success'))
     .catch(error => {
       console.log(error)
       reject(error)
     })
+    } else {
+      reject(new Error('invalid data'))
+    }
   })
 }
 

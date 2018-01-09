@@ -20,7 +20,8 @@
     "clean": "rimraf dist",
     "test-react": "react-scripts test --env=jsdom",
     "test": "jest && codecov",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress-open": "cypress open"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
@@ -47,6 +48,7 @@
     "babel-jest": "^22.0.4",
     "babel-register": "^6.26.0",
     "codecov": "^3.0.0",
+    "cypress": "^1.4.1",
     "dotenv": "^4.0.0",
     "jest": "^22.0.5",
     "nodemon": "^1.14.10",
