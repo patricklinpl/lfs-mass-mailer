@@ -45,6 +45,21 @@ npm run build
 npm run package-mac
 ```
 
+### Testing
+
+```
+Jest:
+npm run test
+
+Cypress:
+npm run build-react 
+npm start
+
+In a new terminal run: 
+npm run cypress-open
+```
+
+
 ## Setup SMTP server
 
 ### Create .env
