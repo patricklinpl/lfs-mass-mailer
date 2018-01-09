@@ -109,7 +109,7 @@ describe('parseData', () => {
       subject: 'test',
       html: '' }
       // local test, parseData(state).catch(data => expect(data.message).toEqual('No recipients defined'))
-    return parseData(state).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
+    return parseData(state).catch(data => expect(data.message).toEqual('invalid data'))
   })
   it('empty subject', () => {
     const state = { data:
