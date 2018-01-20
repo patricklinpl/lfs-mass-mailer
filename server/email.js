@@ -128,12 +128,12 @@ const timeOut = (profile, i) => {
 const sendEmail = (mailOptions) => {
   return new Promise((resolve, reject) => {
     const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: process.env.EMAIL_PORT,
-      secure: process.env.EMAIL_SECURE,
+      host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
+      port: process.env.EMAIL_PORT || '587',
+      secure: process.env.EMAIL_SECURE || 'false',
       auth: {
-        user: process.env.ACCOUNT_USER,
-        pass: process.env.ACCOUNT_PASS
+        user: process.env.ACCOUNT_USER || 'spt3jxfvtblb6e3g@ethereal.email',
+        pass: process.env.ACCOUNT_PASS || 'dAwWqpdbG9Qeb8NQE9'
       },
       tls: {
         rejectUnauthorized: false
