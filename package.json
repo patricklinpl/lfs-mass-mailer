@@ -24,6 +24,9 @@
     "eject": "react-scripts eject",
     "cypress-open": "cypress open"
   },
+  "cacheDirectories": [
+    "node_modules"
+  ],
   "dependencies": {
     "babel-cli": "^6.26.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
