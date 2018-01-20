@@ -134,9 +134,6 @@ const sendEmail = (mailOptions) => {
       auth: {
         user: process.env.ACCOUNT_USER || 'spt3jxfvtblb6e3g@ethereal.email',
         pass: process.env.ACCOUNT_PASS || 'dAwWqpdbG9Qeb8NQE9'
-      },
-      tls: {
-        rejectUnauthorized: false
       }
     })
     transporter.sendMail(mailOptions, (error, info) => {
