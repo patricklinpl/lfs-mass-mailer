@@ -140,7 +140,7 @@ describe('sendEmail', () => {
       subject: 'testsuite',
       html: '<p>Hello Patrick</p>' }
       // local test, sendEmail(mailOptions).catch(data => expect(data.message).toEqual('No recipients defined'))
-    return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('connect ECONNREFUSED 127.0.0.1:587'))
+    return sendEmail(mailOptions).catch(data => expect(data.message).toEqual('No recipients defined'))
   })
   it('no subject', () => {
     const mailOptions = { from: 'Patrick Lin <patrick.lin@sauder.ubc.ca>',
