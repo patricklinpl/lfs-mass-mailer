@@ -9,6 +9,17 @@
 [![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+## Demo
+
+Go to [https://lfs-mass-mailer.herokuapp.com/](https://lfs-mass-mailer.herokuapp.com/)
+
+Login at [https://ethereal.email/login](https://ethereal.email/login) to see your sent email
+
+```
+User: q237myn5dkklzwpc@ethereal.email
+Password: cZ67cn7gXezUVPyNwZ
+```
+
 ## Quick Overview 
 
 ```sh
@@ -58,7 +69,6 @@ npm start
 In a new terminal run: 
 npm run cypress-open
 ```
-
 
 ## Setup SMTP server
 
