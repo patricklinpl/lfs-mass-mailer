@@ -127,29 +127,25 @@ const timeOut = (profile, i) => {
  */
 const sendEmail = (mailOptions) => {
   return new Promise((resolve, reject) => {
-    nodemailer.createTestAccount((err, account) => {
-      const transporter = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
-        port: process.env.EMAIL_PORT || 587,
-        secure: process.env.EMAIL_SECURE || false,
-        auth: {
-          user: process.env.ACCOUNT_USER || account.user,
-          pass: process.env.ACCOUNT_PASS || account.pass
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-      })
-      transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          reject(error)
-          return
-        }
-        console.log('Message sent: %s', info.messageId)
-        // Preview only available when sending through an Ethereal account
-        console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info))
-        nodemailer.getTestMessageUrl(info) === false ? resolve(`Message sent`) : resolve(`Message sent, <a href="${nodemailer.getTestMessageUrl(info)}" target="_blank">Preview URL</a>`)
-      })
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST || 'smtp.ethereal.email',
+      port: process.env.EMAIL_PORT || 587,
+      secure: process.env.EMAIL_SECURE || false,
+      auth: {
+        user: process.env.ACCOUNT_USER || 'qlwbp7bnvnput4om@ethereal.email',
+        pass: process.env.ACCOUNT_PASS || 'Cjy8c5CtKgDkha8ZHB'
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    })
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        reject(error)
+        return
+      }
+      console.log('Message sent: %s', info.messageId)
+      resolve(`Message Sent!`)
     })
   })
 }

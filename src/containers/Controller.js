@@ -133,8 +133,9 @@ export default class Controller extends Component {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200 && response.msg === 'success') {
-          console.log(response.success)
-          this.setState({ view: 'success', success: response.success, loading: false })
+          let successMsg = ''
+          response.success[0].search('Preview') === -1 ? successMsg = response.success[0] : successMsg = response.success
+          this.setState({ view: 'success', success: successMsg, loading: false })
         } else {
           this.setState({ view: 'error', error: response.error, loading: false })
         }
@@ -163,6 +164,7 @@ export default class Controller extends Component {
     return (
       <div className='app-container'>
         <h1 style={{ textAlign: 'center' }}> Mass Mailer </h1>
+        <h2 style={{ textAlign: 'center' }}> Please be Patient and Do Not Refresh the Browser!</h2>
         <br />
         {this.state.view === 'upload' ? <Form handleUpload={this.handleUpload.bind(this)} /> : null}
         {showPreview({ data: this.state.data, view: this.state.view, headers: this.state.headers })
