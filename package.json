@@ -63,7 +63,9 @@
   "jest": {
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
-    "testPathIgnorePatterns": ["<rootDir>/cypress/"]
+    "testPathIgnorePatterns": [
+      "<rootDir>/cypress/"
+    ]
   },
   "babel": {
     "presets": [

@@ -25,8 +25,7 @@ export default class Controller extends Component {
       loading: false,
       title: '',
       msg: '',
-      open: false,
-      error: ''
+      open: false
     }
     this.getHeaders = this.getHeaders.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -134,7 +133,8 @@ export default class Controller extends Component {
       if (xhr.readyState === 4) {
         const response = JSON.parse(xhr.response)
         if (xhr.status === 200 && response.msg === 'success') {
-          this.setState({ view: 'success', loading: false })
+          console.log(response.success)
+          this.setState({ view: 'success', success: response.success, loading: false })
         } else {
           this.setState({ view: 'error', error: response.error, loading: false })
         }
@@ -183,7 +183,7 @@ export default class Controller extends Component {
           /> : null}
         {this.state.loading === true ? <Loading /> : null}
         {this.state.view === 'error' ? <Error reset={this.reset.bind(this)} error={this.state.error} /> : null}
-        {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} /> : null}
+        {this.state.view === 'success' ? <Success reset={this.reset.bind(this)} success={this.state.success} /> : null}
         <Footer />
         <Alert
           title={this.state.title}
