@@ -16,8 +16,8 @@ Go to [https://lfs-mass-mailer.herokuapp.com/](https://lfs-mass-mailer.herokuapp
 Login at [https://ethereal.email/login](https://ethereal.email/login) to see your sent email
 
 ```
-User: q237myn5dkklzwpc@ethereal.email
-Password: cZ67cn7gXezUVPyNwZ
+User: plbg2igo5mmka5xo@ethereal.email
+Password: G4JuNukpvQXb7asENq
 ```
 
 ## Quick Overview 
