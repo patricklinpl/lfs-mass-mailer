@@ -11,7 +11,7 @@
 
 ## Demo
 
-Go to [https://lfs-mass-mailer.herokuapp.com/](https://lfs-mass-mailer.herokuapp.com/)
+Go to [https://www.patricklin.ca/massmailer](https://www.patricklin.ca/massmailer)
 
 Login at [https://ethereal.email/login](https://ethereal.email/login) to see your sent email
 
