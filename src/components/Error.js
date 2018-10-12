@@ -7,7 +7,7 @@ import Paper from 'material-ui/Paper'
 const Error = (props) => (
   <div>
     <br />
-    <img className='center-img' alt='Error!' src='/error.svg' />
+    <img className='center-img' alt='Error!' src='error.svg' />
     <br /> <br />
     <div>
       <Paper style={{margin: 20, padding: 20}} >

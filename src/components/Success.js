@@ -7,7 +7,7 @@ import Paper from 'material-ui/Paper'
 const Success = (props) => (
   <div>
     <br />
-    <img className='center-img' alt='Success!' src='/success.svg' />
+    <img className='center-img' alt='Success!' src='success.svg' />
     <br /> <br />
     <div>
       <Paper style={{margin: 20, padding: 20}} >
