@@ -15,6 +15,7 @@
     "prestart": "npm run -s build",
     "start": "node dist/index.js",
     "heroku-postbuild": "npm install && npm run build-react && npm run build",
+    "production": "npm run build-react && npm run build",
     "build": "npm run clean && shx mkdir -p dist && babel server -s -D -d dist",
     "start-react": "react-scripts start",
     "build-react": "rimraf -rf public/build && react-scripts build && shx mv build public",
